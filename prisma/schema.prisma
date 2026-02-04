@@ -13,20 +13,167 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Users of the platform
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  mobile      String   @unique
+  name        String?
+  email       String?  @unique
+  isVerified  Boolean  @default(false)
+  isAdmin     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  bookings    Booking[]
+  notifications Notification[]
+  
+  @@map("users")
 }
 
-model Post {
-  id        String   @id @default(cuid())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// Temple destinations
+model Temple {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  city        String
+  state       String
+  image       String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  trips       Trip[]
+  
+  @@map("temples")
+}
+
+// Bus routes
+model Route {
+  id          String   @id @default(cuid())
+  origin      String
+  destination String
+  distance    Float?   // in km
+  duration    Float?   // in hours
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  trips       Trip[]
+  
+  @@map("routes")
+}
+
+// Trip schedules
+model Trip {
+  id              String   @id @default(cuid())
+  routeId         String
+  templeId        String
+  title           String
+  description     String?
+  departureDate   DateTime
+  returnDate      DateTime
+  departureTime   String   // HH:MM format
+  returnTime      String   // HH:MM format
+  totalSeats      Int
+  availableSeats  Int
+  pricePerSeat    Float
+  advancePrice    Float?
+  busType         String   // AC, Non-AC, Deluxe, etc.
+  boardingPoints  String   // JSON array of pickup points
+  inclusions      String?  // JSON array of what's included
+  exclusions      String?  // JSON array of what's excluded
+  cancellationPolicy String?
+  emergencyContact String?
+  isActive        Boolean  @default(true)
+  status          String   @default("UPCOMING") // UPCOMING, FULL, CANCELLED, COMPLETED
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  route           Route @relation(fields: [routeId], references: [id])
+  temple          Temple @relation(fields: [templeId], references: [id])
+  bookings        Booking[]
+  
+  @@map("trips")
+}
+
+// Bookings
+model Booking {
+  id              String   @id @default(cuid())
+  userId          String
+  tripId          String
+  bookingId       String   @unique // e.g., WKD-2024-001
+  passengerCount  Int
+  passengerDetails String  // JSON array of passenger info
+  totalAmount     Float
+  advanceAmount   Float?
+  paymentStatus   String   @default("PENDING") // PENDING, ADVANCE_PAID, FULL_PAID, REFUNDED
+  paymentId       String?  // Razorpay payment ID
+  bookingStatus   String   @default("CONFIRMED") // CONFIRMED, CANCELLED, COMPLETED
+  seats           String   // JSON array of seat numbers
+  qrCode          String?
+  specialRequests String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  user            User @relation(fields: [userId], references: [id])
+  trip            Trip @relation(fields: [tripId], references: [id])
+  payments        Payment[]
+  
+  @@map("bookings")
+}
+
+// Payment records
+model Payment {
+  id              String   @id @default(cuid())
+  bookingId       String
+  amount          Float
+  type            String   // ADVANCE, FULL, REFUND
+  status          String   @default("PENDING") // PENDING, SUCCESS, FAILED, REFUNDED
+  paymentMethod   String   // UPI, CARD, NET_BANKING
+  gatewayId       String?  // Razorpay payment ID
+  gatewayOrderId  String?  // Razorpay order ID
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  booking         Booking @relation(fields: [bookingId], references: [id])
+  
+  @@map("payments")
+}
+
+// Notifications
+model Notification {
+  id              String   @id @default(cuid())
+  userId          String?
+  tripId          String?
+  bookingId       String?
+  type            String   // BOOKING_CONFIRMED, TRIP_REMINDER, PAYMENT_RECEIVED, etc.
+  title           String
+  message         String
+  channels        String   // JSON array: SMS, WHATSAPP, EMAIL, PUSH
+  status          String   @default("PENDING") // PENDING, SENT, FAILED
+  sentAt          DateTime?
+  createdAt       DateTime @default(now())
+  
+  // Relations
+  user            User? @relation(fields: [userId], references: [id])
+  
+  @@map("notifications")
+}
+
+// Admin settings
+model Setting {
+  id              String   @id @default(cuid())
+  key             String   @unique
+  value           String
+  description     String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("settings")
 }
