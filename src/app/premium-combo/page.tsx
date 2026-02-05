@@ -56,11 +56,14 @@ export default function PremiumComboLanding() {
     try {
       const response = await fetch('/api/trips')
       if (response.ok) {
-        const data = await response.json()
-        setTrips(data)
+        const result = await response.json()
+        // Handle the API response structure
+        const tripsData = result.data || result || []
+        setTrips(Array.isArray(tripsData) ? tripsData : [])
       }
     } catch (error) {
       console.error('Error fetching trips:', error)
+      setTrips([]) // Ensure trips is always an array
     } finally {
       setLoading(false)
     }
@@ -237,12 +240,31 @@ export default function PremiumComboLanding() {
           <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
             🗓️ Upcoming Tour Dates
           </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {trips.map((trip) => {
-              const daysUntil = getDaysUntil(trip.departureDate)
-              const isAvailable = trip.availableSeats > 0
-              
-              return (
+          
+          {loading ? (
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto mb-4"></div>
+              <p className="text-gray-600">Loading upcoming tour dates...</p>
+            </div>
+          ) : trips.length === 0 ? (
+            <div className="text-center py-12">
+              <Calendar className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-700 mb-2">No upcoming tours found</h3>
+              <p className="text-gray-600 mb-6">We're currently updating our tour schedule. Please check back soon!</p>
+              <Button asChild size="lg" className="bg-orange-600 hover:bg-orange-700">
+                <Link href="/contact">
+                  <Phone className="mr-2 h-5 w-5" />
+                  Contact Us for Custom Tours
+                </Link>
+              </Button>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {trips.map((trip) => {
+                const daysUntil = getDaysUntil(trip.departureDate)
+                const isAvailable = trip.availableSeats > 0
+                
+                return (
                 <Card key={trip.id} className="hover:shadow-lg transition-shadow">
                   <CardHeader>
                     <div className="flex justify-between items-start">
@@ -294,7 +316,8 @@ export default function PremiumComboLanding() {
                 </Card>
               )
             })}
-          </div>
+            </div>
+          )}
         </div>
       </section>
 

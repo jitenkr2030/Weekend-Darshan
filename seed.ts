@@ -15,6 +15,8 @@ async function main() {
   await prisma.route.deleteMany()
   await prisma.user.deleteMany()
   await prisma.setting.deleteMany()
+  
+  console.log('🗑️ Cleared existing data')
 
   // Create admin user
   const hashedPassword = await bcrypt.hash('admin123', 10)
