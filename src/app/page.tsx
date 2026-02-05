@@ -95,7 +95,7 @@ export default function Home() {
           
           <nav className="hidden md:flex items-center gap-6">
             <a href="#" className="text-sm font-medium hover:text-orange-600 transition-colors">Home</a>
-            <a href="/premium-combo" className="text-sm font-medium hover:text-orange-600 transition-colors">Rajasthan</a>
+            <a href="/rajasthan-tour" className="text-sm font-medium hover:text-orange-600 transition-colors">Rajasthan</a>
             <a href="/braj-yatra" className="text-sm font-medium hover:text-orange-600 transition-colors">Braj Yatra</a>
             <a href="/ganga-yatra" className="text-sm font-medium hover:text-orange-600 transition-colors">Ganga Yatra</a>
             <a href="/vaishno-devi" className="text-sm font-medium hover:text-orange-600 transition-colors">Vaishno Devi</a>
@@ -181,9 +181,11 @@ export default function Home() {
                 </div>
               </div>
               
-              <Button className="w-full bg-white text-orange-600 hover:bg-orange-50 font-semibold">
-                Explore Rajasthan Tour
-              </Button>
+              <a href="/rajasthan-tour">
+                <Button className="w-full bg-white text-orange-600 hover:bg-orange-50 font-semibold">
+                  Explore Rajasthan Tour
+                </Button>
+              </a>
             </div>
 
             {/* Braj Yatra Tour */}

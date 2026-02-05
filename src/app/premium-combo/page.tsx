@@ -376,7 +376,7 @@ export default function PremiumComboLanding() {
                           Book Now
                         </Button>
                       </Link>
-                      <Link href={`/${tour.id}-tour`} className="flex-1">
+                      <Link href={`/${tour.id === 'rajasthan' ? 'rajasthan-tour' : tour.id === 'braj' ? 'braj-yatra' : tour.id === 'ganga' ? 'ganga-yatra' : 'vaishno-devi'}`} className="flex-1">
                         <Button variant="outline" className="w-full">
                           View Details
                         </Button>
