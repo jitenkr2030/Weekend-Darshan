@@ -95,6 +95,7 @@ export default function Home() {
           
           <nav className="hidden md:flex items-center gap-6">
             <a href="#" className="text-sm font-medium hover:text-orange-600 transition-colors">Home</a>
+            <a href="/premium-combo" className="text-sm font-medium hover:text-orange-600 transition-colors">Premium Combo</a>
             <a href="/my-bookings" className="text-sm font-medium hover:text-orange-600 transition-colors">My Bookings</a>
             <a href="#" className="text-sm font-medium hover:text-orange-600 transition-colors">Contact</a>
           </nav>
@@ -125,35 +126,51 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-orange-50 to-red-50 py-12 md:py-20">
+      <section className="bg-gradient-to-br from-orange-600 via-orange-500 to-yellow-500 py-12 md:py-20 text-white">
         <div className="container mx-auto px-4 text-center">
           <div className="mb-6">
-            <Badge variant="secondary" className="mb-4">
-              <Star className="h-3 w-3 mr-1" />
-              Trusted by 10,000+ Devotees
+            <Badge className="mb-4 bg-white/20 text-white border-white/30">
+              🔱 EXCLUSIVE PREMIUM COMBO
             </Badge>
-            <h1 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4">
-              Weekend Temple Darshan
-              <span className="block text-orange-600">Made Easy</span>
+            <h1 className="text-3xl md:text-5xl font-bold mb-4">
+              Khatu Shyam ji + Salasar Balaji + Mandawa
+              <span className="block text-yellow-200">Complete Weekend Experience</span>
             </h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
-              Book comfortable weekend trips to Khatu Shyam, Salasar Balaji and more. 
-              AC buses, darshan assistance, and transparent pricing.
+            <p className="text-lg text-white/90 max-w-2xl mx-auto mb-8">
+              Experience the perfect blend of spirituality and culture. 
+              Premium AC buses, early morning darshan, heritage exploration, and back by Monday morning!
             </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+              <a href="/premium-combo">
+                <Button size="lg" className="bg-white text-orange-600 hover:bg-orange-50 text-lg px-8">
+                  Explore Premium Combo
+                </Button>
+              </a>
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-orange-600 text-lg px-8">
+                <Phone className="mr-2 h-5 w-5" />
+                Call: +91-9876543210
+              </Button>
+            </div>
           </div>
 
-          {/* Search Bar */}
-          <div className="max-w-md mx-auto relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <Input
-              placeholder="Search destinations, temples..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-3 text-base"
-            />
-            <Button className="absolute right-1 top-1/2 transform -translate-y-1/2" size="sm">
-              Search
-            </Button>
+          {/* Quick Highlights */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+              <div className="text-2xl font-bold">31-32</div>
+              <div className="text-sm text-white/80">Hours Total</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+              <div className="text-2xl font-bold">3</div>
+              <div className="text-sm text-white/80">Sacred Destinations</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+              <div className="text-2xl font-bold">₹2,899</div>
+              <div className="text-sm text-white/80">Per Person</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+              <div className="text-2xl font-bold">Sat-Mon</div>
+              <div className="text-sm text-white/80">Perfect Timing</div>
+            </div>
           </div>
         </div>
       </section>
@@ -161,37 +178,38 @@ export default function Home() {
       {/* Features */}
       <section className="py-12 bg-white">
         <div className="container mx-auto px-4">
+          <h2 className="text-2xl font-bold text-center mb-8 text-gray-900">Why Choose Our Premium Combo?</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div className="text-center">
               <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
                 <Calendar className="h-6 w-6 text-orange-600" />
               </div>
-              <h3 className="font-semibold mb-1">Weekend Trips</h3>
-              <p className="text-sm text-gray-600">Every weekend departure</p>
+              <h3 className="font-semibold mb-1">Early Darshan</h3>
+              <p className="text-sm text-gray-600">Avoid crowds, peaceful experience</p>
             </div>
             
             <div className="text-center">
               <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
                 <Bus className="h-6 w-6 text-orange-600" />
               </div>
-              <h3 className="font-semibold mb-1">AC Buses</h3>
-              <p className="text-sm text-gray-600">Comfortable travel</p>
+              <h3 className="font-semibold mb-1">Premium AC Bus</h3>
+              <p className="text-sm text-gray-600">Comfortable overnight journey</p>
             </div>
             
             <div className="text-center">
               <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
                 <Users className="h-6 w-6 text-orange-600" />
               </div>
-              <h3 className="font-semibold mb-1">Group Darshan</h3>
-              <p className="text-sm text-gray-600">Special assistance</p>
+              <h3 className="font-semibold mb-1">3 Destinations</h3>
+              <p className="text-sm text-gray-600">Temples + Heritage in one trip</p>
             </div>
             
             <div className="text-center">
               <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
                 <MapPin className="h-6 w-6 text-orange-600" />
               </div>
-              <h3 className="font-semibold mb-1">Multiple Pickup</h3>
-              <p className="text-sm text-gray-600">Convenient locations</p>
+              <h3 className="font-semibold mb-1">Office-Friendly</h3>
+              <p className="text-sm text-gray-600">Back by Monday morning</p>
             </div>
           </div>
         </div>
@@ -203,8 +221,8 @@ export default function Home() {
           <div className="container mx-auto px-4">
             <div className="flex items-center justify-between mb-8">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">This Weekend</h2>
-                <p className="text-gray-600">Join us for this weekend's spiritual journey</p>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">🔱 Premium Combo - This Weekend</h2>
+                <p className="text-gray-600">Join us for this weekend's exclusive spiritual journey</p>
               </div>
               <Badge variant="outline" className="text-green-600 border-green-600">
                 {thisWeekendTrips.length} trips available
@@ -238,7 +256,7 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Upcoming Trips</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">🔱 Premium Combo - Upcoming Dates</h2>
               <p className="text-gray-600">Plan your spiritual journey in advance</p>
             </div>
             <Button variant="outline">
@@ -265,7 +283,7 @@ export default function Home() {
               ))
             ) : (
               <div className="col-span-full text-center py-12">
-                <p className="text-gray-500">No upcoming trips found</p>
+                <p className="text-gray-500">No upcoming premium combo tours found</p>
               </div>
             )}
           </div>
@@ -287,12 +305,12 @@ export default function Home() {
             </div>
             
             <div>
-              <h4 className="font-semibold mb-4">Popular Routes</h4>
+              <h4 className="font-semibold mb-4">Premium Combo</h4>
               <ul className="space-y-2 text-sm text-gray-400">
-                <li>Delhi to Khatu Shyam</li>
-                <li>Delhi to Salasar Balaji</li>
-                <li>Delhi to Vaishno Devi</li>
-                <li>Delhi to Ajmer</li>
+                <li>Khatu Shyam ji</li>
+                <li>Salasar Balaji</li>
+                <li>Mandawa Heritage</li>
+                <li>Weekend Special</li>
               </ul>
             </div>
             
