@@ -1,249 +1,203 @@
-# 🚀 Deployment Guide
+# 🚀 Vercel Deployment Guide for WeekendDarshan
 
-This guide covers various deployment options for the WeekendDarshan platform.
+This guide will help you deploy the WeekendDarshan platform to Vercel with proper database configuration.
 
 ## 📋 Prerequisites
 
-- Node.js 18+ installed
-- Git repository cloned
-- Environment variables configured
-- Database set up
+1. **Vercel Account**: Sign up at [vercel.com](https://vercel.com)
+2. **GitHub Repository**: Your code should be pushed to GitHub
+3. **Environment Variables**: Have your secrets ready
 
-## 🌐 Vercel Deployment (Recommended)
+## 🔧 Step 1: Set Up Environment Variables in Vercel
 
-### 1. Install Vercel CLI
+Go to your Vercel dashboard → Project Settings → Environment Variables and add:
+
+### Required Variables
 ```bash
-npm i -g vercel
+DATABASE_URL="file:./dev.db"
+NEXTAUTH_URL="https://your-domain.vercel.app"
+NEXTAUTH_SECRET="your-secure-secret-key-here"
+JWT_SECRET="your-jwt-secret-here"
 ```
 
-### 2. Login to Vercel
+### Optional Variables (for full functionality)
 ```bash
+RAZORPAY_KEY_ID="your-razorpay-key-id"
+RAZORPAY_KEY_SECRET="your-razorpay-key-secret"
+TWILIO_ACCOUNT_SID="your-twilio-account-sid"
+TWILIO_AUTH_TOKEN="your-twilio-auth-token"
+TWILIO_PHONE_NUMBER="your-twilio-phone-number"
+RESEND_API_KEY="your-resend-api-key"
+FROM_EMAIL="noreply@weekenddarshan.com"
+```
+
+## 🗄️ Step 2: Database Setup for Production
+
+### Option A: Use Vercel Postgres (Recommended)
+1. In Vercel dashboard, go to Storage → Create Database
+2. Select Postgres
+3. Update your `DATABASE_URL` with the provided connection string
+4. Update `prisma/schema.prisma`:
+```prisma
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+```
+
+### Option B: Use SQLite with Vercel KV (Current Setup)
+1. Keep the current SQLite setup
+2. Use `DATABASE_URL="file:./dev.db"`
+3. Note: SQLite will be reset on each deployment
+
+## 🏗️ Step 3: Deploy to Vercel
+
+### Option A: Through Vercel CLI
+```bash
+# Install Vercel CLI
+npm install -g vercel
+
+# Login to Vercel
 vercel login
-```
 
-### 3. Deploy
-```bash
-vercel
-```
-
-### 4. Configure Environment Variables
-In Vercel dashboard, add these environment variables:
-```
-DATABASE_URL=your-production-database-url
-NEXTAUTH_URL=https://your-domain.vercel.app
-NEXTAUTH_SECRET=your-secret-key
-```
-
-### 5. Deploy to Production
-```bash
+# Deploy
 vercel --prod
 ```
 
-## 🐳 Docker Deployment
+### Option B: Through GitHub Integration
+1. Connect your GitHub repository to Vercel
+2. Vercel will automatically deploy on push to main branch
+3. Configure build settings:
+   - **Build Command**: `npm run vercel-build`
+   - **Output Directory**: `.next`
+   - **Install Command**: `npm install`
 
-### 1. Build Docker Image
-```bash
-docker build -t weekend-darshan .
-```
+## 🔍 Step 4: Verify Deployment
 
-### 2. Run Container
-```bash
-docker run -p 3000:3000 \
-  -e DATABASE_URL="file:./prod.db" \
-  -e NEXTAUTH_URL="http://localhost:3000" \
-  -e NEXTAUTH_SECRET="your-secret-key" \
-  weekend-darshan
-```
+1. **Check Build Logs**: Ensure no errors during build
+2. **Test API Endpoints**: Visit `/api/trips` to test database connection
+3. **Test Frontend**: Verify the application loads properly
+4. **Test Booking Flow**: Complete a test booking
 
-### 3. With Docker Compose
-Create `docker-compose.yml`:
-```yaml
-version: '3.8'
-services:
-  app:
-    build: .
-    ports:
-      - "3000:3000"
-    environment:
-      - DATABASE_URL=file:./prod.db
-      - NEXTAUTH_URL=http://localhost:3000
-      - NEXTAUTH_SECRET=your-secret-key
-    volumes:
-      - ./data:/app/data
-```
+## 🛠️ Step 5: Database Seeding (Important!)
 
-Run:
-```bash
-docker-compose up -d
-```
+Since SQLite is used, you need to seed the database after deployment:
 
-## 🖥️ Traditional Server Deployment
+### Option A: Automatic Seeding
+Create a new API endpoint `/api/seed`:
+```typescript
+// src/app/api/seed/route.ts
+import { NextRequest, NextResponse } from 'next/server'
+import { db } from '@/lib/db'
+import { seedData } from '@/seed'
 
-### 1. Build for Production
-```bash
-bun run build
-```
-
-### 2. Install PM2 (Process Manager)
-```bash
-npm install -g pm2
-```
-
-### 3. Start with PM2
-```bash
-pm2 start npm --name "weekend-darshan" -- start
-```
-
-### 4. Setup PM2 to Start on Boot
-```bash
-pm2 startup
-pm2 save
-```
-
-## 🔧 Environment Setup
-
-### Production Environment Variables
-Create `.env.production`:
-```env
-DATABASE_URL="your-production-database-url"
-NEXTAUTH_URL="https://your-domain.com"
-NEXTAUTH_SECRET="your-very-secure-secret-key"
-RAZORPAY_KEY_ID="your-razorpay-key"
-RAZORPAY_KEY_SECRET="your-razorpay-secret"
-```
-
-### Database Setup
-```bash
-# For production, consider PostgreSQL
-# Update DATABASE_URL accordingly
-# Example: postgresql://user:password@localhost:5432/weekend_darshan
-
-# Push schema to production database
-bun run db:push
-
-# Seed data if needed
-bun run seed.ts
-```
-
-## 🌍 Nginx Configuration (Optional)
-
-For custom domains and SSL:
-
-```nginx
-server {
-    listen 80;
-    server_name your-domain.com;
-    return 301 https://$server_name$request_uri;
+export async function POST(request: NextRequest) {
+  try {
+    await seedData()
+    return NextResponse.json({ success: true, message: 'Database seeded successfully' })
+  } catch (error) {
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 })
+  }
 }
+```
 
-server {
-    listen 443 ssl;
-    server_name your-domain.com;
+### Option B: Manual Seeding
+1. Access your Vercel project logs
+2. Find the function URL and call the seed endpoint
+3. Or use Vercel CLI to run commands
 
-    ssl_certificate /path/to/ssl/cert.pem;
-    ssl_certificate_key /path/to/ssl/key.pem;
+## 🐛 Common Issues & Solutions
 
-    location / {
-        proxy_pass http://localhost:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_cache_bypass $http_upgrade;
+### Issue 1: DATABASE_URL not found
+**Solution**: Ensure `DATABASE_URL` is set in Vercel environment variables
+
+### Issue 2: Prisma Client Initialization Error
+**Solution**: Add `postinstall` script to package.json:
+```json
+{
+  "scripts": {
+    "postinstall": "prisma generate"
+  }
+}
+```
+
+### Issue 3: Database connection timeout
+**Solution**: For SQLite, ensure the database file is created:
+```typescript
+// In your API routes, add:
+import { PrismaClient } from '@prisma/client'
+import { exec } from 'child_process'
+
+const prisma = new PrismaClient()
+
+// Ensure database exists
+if (process.env.NODE_ENV === 'production') {
+  exec('touch ./dev.db')
+}
+```
+
+### Issue 4: Build fails on Prisma generate
+**Solution**: Update vercel.json:
+```json
+{
+  "build": {
+    "env": {
+      "PRISMA_GENERATE_DATAPROXY": "true"
     }
+  }
 }
 ```
 
-## 📊 Monitoring
+## 📊 Monitoring & Maintenance
 
-### Health Check Endpoint
-The application includes a health check at `/api/health`
+### Check Application Health
+- Visit `/api/trips` - Should return trip data
+- Visit `/api/health` - Create a health check endpoint
+- Monitor Vercel function logs
 
-### PM2 Monitoring
-```bash
-pm2 monit
+### Database Backups
+- For SQLite: Download database file regularly
+- For Postgres: Use Vercel's automatic backups
+
+## 🚀 Production Optimizations
+
+### 1. Enable Caching
+```typescript
+// In API routes, add caching headers
+export async function GET() {
+  const data = await db.trip.findMany()
+  
+  return NextResponse.json(data, {
+    headers: {
+      'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=30'
+    }
+  })
+}
 ```
 
-### Logs
-```bash
-pm2 logs weekend-darshan
+### 2. Optimize Images
+```typescript
+import Image from 'next/image'
+
+// Use Next.js Image component for all images
+<Image src="/logo.svg" alt="WeekendDarshan" width={120} height={40} />
 ```
 
-## 🔒 Security Considerations
-
-1. **Environment Variables**: Never commit `.env` files
-2. **Database**: Use strong passwords for production databases
-3. **HTTPS**: Always use SSL in production
-4. **Dependencies**: Keep packages updated
-5. **Rate Limiting**: Implement rate limiting for APIs
-6. **CORS**: Configure CORS properly
-
-## 🚨 Troubleshooting
-
-### Common Issues
-
-1. **Build Errors**
-   - Check Node.js version (18+)
-   - Clear cache: `rm -rf .next`
-
-2. **Database Connection**
-   - Verify DATABASE_URL
-   - Check database accessibility
-
-3. **Environment Variables**
-   - Ensure all required variables are set
-   - Check for typos in variable names
-
-4. **Port Conflicts**
-   - Change port if 3000 is in use
-   - Use `PORT=3001 bun start`
-
-### Debug Mode
-```bash
-NODE_ENV=development bun run dev
-```
-
-## 📈 Performance Optimization
-
-1. **Enable Caching**: Configure CDN
-2. **Image Optimization**: Use Next.js Image component
-3. **Code Splitting**: Automatic with Next.js
-4. **Database Indexing**: Add indexes for frequent queries
-5. **Monitor**: Use analytics to track performance
-
-## 🔄 CI/CD Pipeline
-
-### GitHub Actions Example
-```yaml
-name: Deploy to Vercel
-on:
-  push:
-    branches: [main]
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '18'
-      - name: Install dependencies
-        run: bun install
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v20
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.ORG_ID }}
-          vercel-project-id: ${{ secrets.PROJECT_ID }}
-```
+### 3. Enable Analytics
+Add Google Analytics or Vercel Analytics to track performance
 
 ## 📞 Support
 
-For deployment issues:
-- Check GitHub Issues
-- Contact: info@weekenddarshan.com
-- Documentation: [README.md](./README.md)
+If you encounter issues:
+1. Check Vercel deployment logs
+2. Verify environment variables
+3. Test API endpoints individually
+4. Check this guide for common solutions
+
+## 🎉 Success!
+
+Once deployed, your WeekendDarshan platform will be available at:
+- **Main Site**: `https://your-domain.vercel.app`
+- **Admin Panel**: `https://your-domain.vercel.app/admin/login`
+
+Your platform is now live and ready to accept bookings! 🚌✨

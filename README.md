@@ -326,16 +326,58 @@ bun run test:watch   # Run tests in watch mode
 
 ## 🚀 Deployment
 
-### Vercel (Recommended)
+### 🌐 Vercel (Recommended for Production)
+
+The application is optimized for Vercel deployment with proper environment variable handling.
+
+#### Quick Deploy with Vercel CLI
 ```bash
 # Install Vercel CLI
 npm i -g vercel
 
-# Deploy
-vercel
+# Login to Vercel
+vercel login
+
+# Deploy to production
+vercel --prod
 ```
 
-### Docker
+#### Manual Deployment Steps
+
+1. **Set Environment Variables in Vercel Dashboard**:
+   ```bash
+   DATABASE_URL="file:./dev.db"
+   NEXTAUTH_URL="https://your-domain.vercel.app"
+   NEXTAUTH_SECRET="your-secure-secret-key"
+   JWT_SECRET="your-jwt-secret"
+   RAZORPAY_KEY_ID="your-razorpay-key"
+   RAZORPAY_KEY_SECRET="your-razorpay-secret"
+   ```
+
+2. **Deploy via GitHub Integration**:
+   - Connect your repository to Vercel
+   - Vercel will auto-deploy on push to main branch
+   - Build settings are pre-configured in `vercel.json`
+
+3. **Seed Database After Deployment**:
+   ```bash
+   # Call the seed endpoint (requires auth in production)
+   curl -X POST https://your-domain.vercel.app/api/seed \
+        -H "Authorization: Bearer YOUR_SEED_API_KEY"
+   ```
+
+#### Environment Variables Required
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `DATABASE_URL` | Database connection string | `file:./dev.db` |
+| `NEXTAUTH_URL` | Your deployed app URL | `https://your-domain.vercel.app` |
+| `NEXTAUTH_SECRET` | NextAuth secret key | `your-secure-secret-key` |
+| `JWT_SECRET` | JWT signing secret | `your-jwt-secret` |
+| `RAZORPAY_KEY_ID` | Razorpay test/live key | `rzp_test_...` |
+| `RAZORPAY_KEY_SECRET` | Razorpay secret | `your-razorpay-secret` |
+
+### 🐳 Docker Deployment
 ```bash
 # Build Docker image
 docker build -t weekend-darshan .
@@ -344,7 +386,7 @@ docker build -t weekend-darshan .
 docker run -p 3000:3000 weekend-darshan
 ```
 
-### Traditional Hosting
+### 🏠 Traditional Hosting
 ```bash
 # Build for production
 bun run build
@@ -352,6 +394,26 @@ bun run build
 # Start production server
 bun start
 ```
+
+### 📊 Health Check
+
+After deployment, test your application:
+```bash
+# Check application health
+curl https://your-domain.vercel.app/api/health
+
+# Check trips API
+curl https://your-domain.vercel.app/api/trips
+```
+
+### 🔧 Troubleshooting Common Issues
+
+1. **DATABASE_URL not found**: Ensure environment variable is set in Vercel dashboard
+2. **Prisma Client error**: Run `prisma generate` during build
+3. **Build timeout**: Increase function timeout in `vercel.json`
+4. **Database empty**: Call `/api/seed` endpoint to populate data
+
+For detailed deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md).
 
 ---
 
