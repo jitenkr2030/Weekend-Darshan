@@ -15,9 +15,9 @@ export default function RajasthanTourPage() {
     const fetchTourData = async () => {
       try {
         const response = await fetch('/api/trips');
-        const data = await response.json();
-        const rajasthanTour = data.trips.find((trip: any) => 
-          trip.title.includes('Rajasthan Special') || 
+        const result = await response.json();
+        const rajasthanTour = result.data.find((trip: any) => 
+          trip.title.includes('Premium Combo') && 
           trip.title.includes('Khatu Shyam')
         );
         setTourData(rajasthanTour);
@@ -56,9 +56,14 @@ export default function RajasthanTourPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <p className="text-gray-600">Tour information not available</p>
-          <Link href="/" className="text-orange-600 hover:text-orange-700 mt-4 inline-block">
-            ← Back to Home
-          </Link>
+          <div className="mt-4 space-y-2">
+            <Link href="/" className="text-orange-600 hover:text-orange-700 block">
+              ← Back to Home
+            </Link>
+            <Link href="/premium-combo" className="text-orange-600 hover:text-orange-700 block">
+              View All Tours →
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -99,6 +104,24 @@ export default function RajasthanTourPage() {
                 <span>45 Seats</span>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Premium Combo Link */}
+      <div className="bg-orange-50 border-b border-orange-100">
+        <div className="container mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-orange-800">
+              <span className="text-sm">Looking for more tour options?</span>
+            </div>
+            <Link 
+              href="/premium-combo" 
+              className="text-orange-600 hover:text-orange-700 font-medium text-sm flex items-center gap-1"
+            >
+              View All Tours
+              <span className="text-lg">→</span>
+            </Link>
           </div>
         </div>
       </div>
