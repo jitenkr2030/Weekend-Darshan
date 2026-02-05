@@ -1,147 +1,28 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Calendar, MapPin, Clock, Users, Star, Check, AlertCircle, ArrowRight, Heart, Sparkles, Utensils, Bus, Shield, Mountain, Waves, Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import Link from 'next/link';
-
-interface Tour {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  duration: string;
-  busType: string;
-  departureTime: string;
-  arrivalTime: string;
-  departureDays: string[];
-  pickupPoints: string[];
-  itinerary: {
-    time: string;
-    title: string;
-    description: string;
-    day: string;
-  }[];
-  inclusions: string[];
-  exclusions: string[];
-  highlights: string[];
-  route: string;
-  totalDistance: string;
-  seatsAvailable: number;
-  maxSeats: number;
-}
+import { useState, useEffect } from "react";
+import { Calendar, Clock, MapPin, Users, Star, Check, X, AlertCircle, Bus, Utensils, Camera, Shield, Phone, Info } from "lucide-react";
+import Link from "next/link";
 
 export default function GangaYatraPage() {
-  const [tour, setTour] = useState<Tour | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [selectedDate, setSelectedDate] = useState("");
   const [passengers, setPassengers] = useState(1);
+  const [activeTab, setActiveTab] = useState("overview");
+  const [tourData, setTourData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchTourData = async () => {
       try {
-        setLoading(true);
         const response = await fetch('/api/trips');
-        if (!response.ok) {
-          throw new Error('Failed to fetch tour data');
-        }
         const result = await response.json();
         const gangaYatraTour = result.data.find((trip: any) => 
           trip.title.includes('Ganga Yatra') || 
           (trip.title.includes('Haridwar') && trip.title.includes('Rishikesh'))
         );
-        
-        if (gangaYatraTour) {
-          // Add fallback data for missing properties
-          const tourWithFallbacks = {
-            ...gangaYatraTour,
-            highlights: gangaYatraTour.highlights || [
-              "Sacred Ganga Darshan at Har Ki Pauri",
-              "Spiritual experience in Rishikesh",
-              "Divine blessing at Neelkanth Mahadev Temple",
-              "Scenic Himalayan foothills journey",
-              "Professional tour guide included",
-              "Comfortable AC bus travel"
-            ],
-            inclusions: gangaYatraTour.inclusions || [
-              "Deluxe AC Bus Transportation",
-              "Professional Tour Guide",
-              "All Toll and Parking Fees",
-              "Lunch at Premium Restaurant in Rishikesh",
-              "Morning Tea and Refreshments",
-              "Driver Allowances",
-              "24/7 Emergency Support"
-            ],
-            exclusions: gangaYatraTour.exclusions || [
-              "Personal Expenses",
-              "Additional Meals not mentioned",
-              "Ropeway or Cable Car Charges",
-              "Special Puja or Darshan Charges",
-              "Travel Insurance",
-              "Any other services not mentioned"
-            ],
-            itinerary: gangaYatraTour.itinerary || [
-              {
-                day: "Saturday Night",
-                time: "10:00 PM",
-                title: "Departure from Delhi",
-                description: "Pickup from Kashmiri Gate, Noida, Ghaziabad. Overnight comfortable journey to Haridwar."
-              },
-              {
-                day: "Sunday Early Morning",
-                time: "5:00 - 7:30 AM",
-                title: "Haridwar - Har Ki Pauri",
-                description: "Arrival at Haridwar, sacred Ganga Snan (optional), Har Ki Pauri darshan, morning aarti experience."
-              },
-              {
-                day: "Sunday Morning",
-                time: "9:00 AM - 12:30 PM",
-                title: "Rishikesh Local Sightseeing",
-                description: "Visit Laxman Jhula, Ram Jhula, Parmarth Niketan Ashram. Explore spiritual centers and ghats."
-              },
-              {
-                day: "Sunday Afternoon",
-                time: "1:00 - 2:00 PM",
-                title: "Lunch Break",
-                description: "Complimentary lunch at premium restaurant in Rishikesh."
-              },
-              {
-                day: "Sunday Evening",
-                time: "3:30 - 6:30 PM",
-                title: "Neelkanth Mahadev Temple",
-                description: "Scenic drive to Neelkanth Mahadev Temple, evening aarti, beautiful sunset views from Himalayan foothills."
-              },
-              {
-                day: "Sunday Night",
-                time: "7:00 PM",
-                title: "Return Journey",
-                description: "Departure from Neelkanth, overnight journey back to Delhi."
-              },
-              {
-                day: "Monday Morning",
-                time: "5:00 - 6:00 AM",
-                title: "Arrival in Delhi",
-                description: "Arrival at Delhi with divine memories and spiritual blessings."
-              }
-            ],
-            pickupPoints: gangaYatraTour.pickupPoints || ["Kashmiri Gate", "Noida (Sector 18)", "Ghaziabad"],
-            route: gangaYatraTour.route || "Delhi → Haridwar → Rishikesh → Neelkanth → Delhi",
-            totalDistance: gangaYatraTour.totalDistance || "450 km",
-            departureDays: gangaYatraTour.departureDays || ["Friday, 15 Nov 2024", "Friday, 22 Nov 2024", "Friday, 29 Nov 2024", "Friday, 6 Dec 2024", "Friday, 13 Dec 2024"],
-            seatsAvailable: gangaYatraTour.seatsAvailable || 50,
-            maxSeats: gangaYatraTour.maxSeats || 50
-          };
-          setTour(tourWithFallbacks);
-        } else {
-          setError('Ganga Yatra tour not found');
-        }
-      } catch (err) {
-        setError('Failed to load tour information');
-        console.error('Error fetching tour data:', err);
+        setTourData(gangaYatraTour);
+      } catch (error) {
+        console.error('Error fetching tour data:', error);
       } finally {
         setLoading(false);
       }
@@ -150,32 +31,37 @@ export default function GangaYatraPage() {
     fetchTourData();
   }, []);
 
+  const handleBookNow = () => {
+    if (!selectedDate) {
+      alert("Please select a travel date");
+      return;
+    }
+    // Navigate to booking page with selected data
+    window.location.href = `/booking?tourId=${tourData?.id}&date=${selectedDate}&passengers=${passengers}`;
+  };
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin text-blue-600 mx-auto mb-4" />
-          <p className="text-blue-600">Loading Ganga Yatra tour information...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading tour information...</p>
         </div>
       </div>
     );
   }
 
-  if (error || !tour) {
+  if (!tourData) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center">
-        <div className="text-center p-8">
-          <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Tour information not available</h1>
-          <p className="text-gray-600 mb-6">{error || 'Ganga Yatra tour not found'}</p>
-          <div className="flex gap-4 justify-center">
-            <Link href="/">
-              <Button variant="outline">← Back to Home</Button>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-600">Tour information not available</p>
+          <div className="mt-4 space-y-2">
+            <Link href="/" className="text-blue-600 hover:text-blue-700 block">
+              ← Back to Home
             </Link>
-            <Link href="/premium-combo">
-              <Button className="bg-blue-600 hover:bg-blue-700">
-                View All Tours →
-              </Button>
+            <Link href="/premium-combo" className="text-blue-600 hover:text-blue-700 block">
+              View All Tours →
             </Link>
           </div>
         </div>
@@ -184,287 +70,716 @@ export default function GangaYatraPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+    <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-r from-blue-600 to-cyan-600 text-white">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative container mx-auto px-4 py-16">
+      <div className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white">
+        <div className="container mx-auto px-4 py-16">
           <div className="max-w-4xl mx-auto text-center">
-            <Badge className="mb-4 bg-white/20 text-white border-white/30">
-              🌊 Ganga Darshan Special
-            </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              {tour.title.replace('🌊 Ganga Yatra: ', '')}
+            <div className="flex justify-center mb-6">
+              <div className="bg-white/20 backdrop-blur-sm rounded-full p-4">
+                <span className="text-4xl">🌊</span>
+              </div>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+              Ganga Yatra Special
             </h1>
-            <p className="text-xl mb-8 text-white/90">
-              {tour.description}
+            <p className="text-xl mb-8 text-blue-100">
+              Haridwar + Rishikesh + Neelkanth Mahadev
             </p>
-            <div className="flex flex-wrap justify-center gap-4 mb-8">
-              <div className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full">
+            <div className="flex flex-wrap justify-center gap-4 text-sm">
+              <div className="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 flex items-center gap-2">
                 <Clock className="w-4 h-4" />
-                <span>{tour.duration}</span>
+                <span>32-34 Hours</span>
               </div>
-              <div className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full">
-                <Calendar className="w-4 h-4" />
-                <span>{tour.departureTime} - {tour.arrivalTime}</span>
+              <div className="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 flex items-center gap-2">
+                <MapPin className="w-4 h-4" />
+                <span>5 Sacred & Spiritual Sites</span>
               </div>
-              <div className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full">
+              <div className="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 flex items-center gap-2">
+                <Bus className="w-4 h-4" />
+                <span>Deluxe AC Push-Back</span>
+              </div>
+              <div className="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 flex items-center gap-2">
                 <Users className="w-4 h-4" />
-                <span>{tour.maxSeats} Seats</span>
+                <span>45 Seats</span>
               </div>
-            </div>
-            <div className="text-3xl font-bold mb-8">
-              ₹{tour.price} <span className="text-lg font-normal text-white/80">per person</span>
-            </div>
-            <div className="flex gap-4 justify-center">
-              <Link href="/#tours">
-                <Button size="lg" className="bg-white text-blue-600 hover:bg-white/90">
-                  Book Now - Limited Seats
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
-              </Link>
-              <Link href="/premium-combo">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/20">
-                  View All Tours
-                </Button>
-              </Link>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-12">
-        <Tabs defaultValue="overview" className="max-w-6xl mx-auto">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="itinerary">Itinerary</TabsTrigger>
-            <TabsTrigger value="inclusions">Inclusions</TabsTrigger>
-            <TabsTrigger value="booking">Book Now</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="overview" className="space-y-8">
-            <div className="grid md:grid-cols-2 gap-8">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Star className="w-5 h-5 text-yellow-500" />
-                    Tour Highlights
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-3">
-                    {tour.highlights.map((highlight, index) => (
-                      <li key={index} className="flex items-start gap-2">
-                        <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-sm">{highlight}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <AlertCircle className="w-5 h-5 text-blue-500" />
-                    Tour Features
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                    <span className="font-medium">Bus Type</span>
-                    <Badge>{tour.busType}</Badge>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                    <span className="font-medium">Duration</span>
-                    <Badge>{tour.duration}</Badge>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                    <span className="font-medium">Route</span>
-                    <Badge>{tour.route}</Badge>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                    <span className="font-medium">Distance</span>
-                    <Badge>{tour.totalDistance}</Badge>
-                  </div>
-                </CardContent>
-              </Card>
+      {/* Premium Combo Link */}
+      <div className="bg-blue-50 border-b border-blue-100">
+        <div className="container mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-blue-800">
+              <span className="text-sm">Looking for more tour options?</span>
             </div>
+            <Link 
+              href="/premium-combo" 
+              className="text-blue-600 hover:text-blue-700 font-medium text-sm flex items-center gap-1"
+            >
+              View All Tours
+              <span className="text-lg">→</span>
+            </Link>
+          </div>
+        </div>
+      </div>
 
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <MapPin className="w-5 h-5 text-blue-600" />
-                  Pickup Points
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid md:grid-cols-3 gap-3">
-                  {tour.pickupPoints.map((point, index) => (
-                    <div key={index} className="flex items-center gap-2 p-3 bg-blue-50 rounded-lg">
-                      <MapPin className="w-4 h-4 text-blue-600" />
-                      <span className="text-sm">{point}</span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
+      {/* Navigation Tabs */}
+      <div className="bg-white shadow-sm sticky top-0 z-40">
+        <div className="container mx-auto px-4">
+          <div className="flex space-x-8">
+            {["overview", "itinerary", "inclusions", "booking"].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`py-4 px-2 border-b-2 font-medium text-sm capitalize transition-colors ${
+                  activeTab === tab
+                    ? "border-blue-600 text-blue-600"
+                    : "border-transparent text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
 
-          <TabsContent value="itinerary" className="space-y-6">
-            <div className="space-y-6">
-              {tour.itinerary.map((item, index) => (
-                <Card key={index} className="relative">
-                  <CardContent className="p-6">
-                    <div className="flex gap-4">
-                      <div className="flex-shrink-0">
-                        <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                          <Clock className="w-6 h-6 text-blue-600" />
-                        </div>
+      {/* Content Sections */}
+      <div className="container mx-auto px-4 py-8">
+        {/* Overview Tab */}
+        {activeTab === "overview" && (
+          <div className="max-w-6xl mx-auto">
+            <div className="grid lg:grid-cols-3 gap-8">
+              {/* Main Content */}
+              <div className="lg:col-span-2 space-y-8">
+                {/* Tour Highlights */}
+                <div className="bg-white rounded-xl shadow-sm p-6">
+                  <h2 className="text-2xl font-bold mb-4 text-gray-900">Tour Highlights</h2>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="flex items-start gap-3">
+                      <div className="bg-blue-100 rounded-lg p-2 mt-1">
+                        <span className="text-xl">🌊</span>
                       </div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <Badge variant="outline">{item.day}</Badge>
-                          <span className="font-semibold text-blue-600">{item.time}</span>
-                        </div>
-                        <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
-                        <p className="text-gray-600">{item.description}</p>
+                      <div>
+                        <h3 className="font-semibold text-gray-900">Har Ki Pauri</h3>
+                        <p className="text-sm text-gray-600">Sacred Ganga ghat in Haridwar</p>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="inclusions" className="space-y-8">
-            <div className="grid md:grid-cols-2 gap-8">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-green-600">
-                    <Check className="w-5 h-5" />
-                    What's Included
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-3">
-                    {tour.inclusions.map((item, index) => (
-                      <li key={index} className="flex items-start gap-2">
-                        <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-sm">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-red-600">
-                    <AlertCircle className="w-5 h-5" />
-                    What's Not Included
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-3">
-                    {tour.exclusions.map((item, index) => (
-                      <li key={index} className="flex items-start gap-2">
-                        <AlertCircle className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-sm">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="booking" className="space-y-8">
-            <Card>
-              <CardHeader>
-                <CardTitle>Select Your Travel Date</CardTitle>
-                <CardDescription>
-                  Choose your preferred weekend for the Ganga Yatra tour
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-4">
-                  {tour.departureDays.map((day, index) => (
-                    <div
-                      key={index}
-                      className={`p-4 border rounded-lg cursor-pointer transition-all ${
-                        selectedDate === day
-                          ? 'border-blue-500 bg-blue-50'
-                          : 'border-gray-200 hover:border-blue-300'
-                      }`}
-                      onClick={() => setSelectedDate(day)}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="font-semibold">
-                            {day} Departure
-                          </div>
-                          <div className="text-sm text-gray-600">Weekend Special</div>
-                        </div>
-                        <div className="text-right">
-                          <div className="font-bold text-lg">₹{tour.price}</div>
-                          <div className="text-sm">
-                            {tour.seatsAvailable} seats left
-                          </div>
-                          <Badge
-                            variant={tour.seatsAvailable < 10 ? 'destructive' : 'secondary'}
-                            className="mt-1"
-                          >
-                            {tour.seatsAvailable < 10 ? 'Limited Seats' : 'Available'}
-                          </Badge>
-                        </div>
+                    <div className="flex items-start gap-3">
+                      <div className="bg-blue-100 rounded-lg p-2 mt-1">
+                        <span className="text-xl">🕉️</span>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900">Lakshman Jhula</h3>
+                        <p className="text-sm text-gray-600">Iconic suspension bridge in Rishikesh</p>
                       </div>
                     </div>
-                  ))}
+                    <div className="flex items-start gap-3">
+                      <div className="bg-blue-100 rounded-lg p-2 mt-1">
+                        <span className="text-xl">🏔️</span>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900">Neelkanth Mahadev</h3>
+                        <p className="text-sm text-gray-600">Ancient Shiva temple in Himalayan foothills</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="bg-blue-100 rounded-lg p-2 mt-1">
+                        <span className="text-xl">🍽️</span>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900">Satvik Meals</h3>
+                        <p className="text-sm text-gray-600">Pure vegetarian spiritual cuisine</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                {selectedDate && (
-                  <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="font-medium">Number of Passengers:</span>
-                      <div className="flex items-center gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
+                {/* Why Choose This Tour */}
+                <div className="bg-white rounded-xl shadow-sm p-6">
+                  <h2 className="text-2xl font-bold mb-4 text-gray-900">Why Choose This Tour?</h2>
+                  <div className="space-y-4">
+                    <div className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-green-600 mt-0.5" />
+                      <div>
+                        <h3 className="font-semibold text-gray-900">Perfect Weekend Plan</h3>
+                        <p className="text-sm text-gray-600">No leave required - Saturday night to Monday morning</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-green-600 mt-0.5" />
+                      <div>
+                        <h3 className="font-semibold text-gray-900">Spiritual Bliss</h3>
+                        <p className="text-sm text-gray-600">Experience the divine Ganga and Himalayan spirituality</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-green-600 mt-0.5" />
+                      <div>
+                        <h3 className="font-semibold text-gray-900">Comfortable Travel</h3>
+                        <p className="text-sm text-gray-600">Deluxe AC buses with experienced drivers</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-green-600 mt-0.5" />
+                      <div>
+                        <h3 className="font-semibold text-gray-900">Expert Guidance</h3>
+                        <p className="text-sm text-gray-600">Professional tour coordinator throughout the journey</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Important Information */}
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-6">
+                  <div className="flex items-start gap-3">
+                    <AlertCircle className="w-5 h-5 text-amber-600 mt-0.5" />
+                    <div>
+                      <h3 className="font-semibold text-amber-900">Important Information</h3>
+                      <ul className="text-sm text-amber-800 mt-2 space-y-1">
+                        <li>• Carry valid ID proof for temple entry</li>
+                        <li>• Dress modestly for temple visits</li>
+                        <li>• Morning Ganga arti recommended for peaceful experience</li>
+                        <li>• Photography restrictions may apply in some temples</li>
+                        <li>• Carry minimal luggage for convenience</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Booking Card */}
+              <div className="lg:col-span-1">
+                <div className="bg-white rounded-xl shadow-sm p-6 sticky top-24">
+                  <div className="text-center mb-6">
+                    <div className="text-3xl font-bold text-blue-600">₹2,100</div>
+                    <div className="text-sm text-gray-500">per person</div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Select Travel Date
+                      </label>
+                      <select
+                        value={selectedDate}
+                        onChange={(e) => setSelectedDate(e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        <option value="">Choose a date</option>
+                        {tourData?.dates?.map((date: any) => (
+                          <option key={date.id} value={date.id}>
+                            {new Date(date.date).toLocaleDateString('en-IN', {
+                              weekday: 'short',
+                              day: 'numeric',
+                              month: 'short'
+                            })} - {date.availableSeats} seats available
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Number of Passengers
+                      </label>
+                      <div className="flex items-center gap-3">
+                        <button
                           onClick={() => setPassengers(Math.max(1, passengers - 1))}
+                          className="w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-50"
                         >
                           -
-                        </Button>
-                        <span className="w-8 text-center">{passengers}</span>
-                        <Button
-                          variant="outline"
-                          size="sm"
+                        </button>
+                        <span className="flex-1 text-center font-semibold">{passengers}</span>
+                        <button
                           onClick={() => setPassengers(Math.min(6, passengers + 1))}
+                          className="w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-50"
                         >
                           +
-                        </Button>
+                        </button>
                       </div>
                     </div>
-                    <div className="border-t pt-4">
-                      <div className="flex justify-between items-center mb-4">
-                        <span className="text-lg font-semibold">Total Amount:</span>
-                        <span className="text-2xl font-bold text-blue-600">
-                          ₹{tour.price * passengers}
-                        </span>
+
+                    <button
+                      onClick={handleBookNow}
+                      className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                    >
+                      Book Now
+                    </button>
+
+                    <div className="text-xs text-gray-500 text-center">
+                      <div className="flex items-center justify-center gap-2 mb-2">
+                        <Shield className="w-3 h-3" />
+                        <span>Secure Booking</span>
                       </div>
-                      <Link href="/#tours">
-                        <Button className="w-full bg-blue-600 hover:bg-blue-700">
-                          Proceed to Booking
-                          <ArrowRight className="ml-2 w-4 h-4" />
-                        </Button>
-                      </Link>
+                      <div>Free cancellation up to 24 hours before departure</div>
                     </div>
                   </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+
+                  <div className="mt-6 pt-6 border-t border-gray-200">
+                    <h4 className="font-semibold text-gray-900 mb-3">Tour Includes</h4>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <Check className="w-4 h-4 text-green-600" />
+                        <span>Deluxe AC Bus Transportation</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <Check className="w-4 h-4 text-green-600" />
+                        <span>Breakfast & Lunch</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <Check className="w-4 h-4 text-green-600" />
+                        <span>Temple Darshan Assistance</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <Check className="w-4 h-4 text-green-600" />
+                        <span>Tour Coordinator</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Itinerary Tab */}
+        {activeTab === "itinerary" && (
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <h2 className="text-2xl font-bold mb-6 text-gray-900">Detailed Itinerary</h2>
+              
+              <div className="space-y-8">
+                {/* Day 1 - Saturday Night */}
+                <div className="relative">
+                  <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-blue-200 ml-4"></div>
+                  
+                  <div className="relative flex items-start gap-4">
+                    <div className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-semibold z-10">
+                      1
+                    </div>
+                    <div className="flex-1">
+                      <div className="bg-blue-50 rounded-lg p-4">
+                        <h3 className="font-semibold text-gray-900 mb-2">Saturday Night - Departure</h3>
+                        <div className="space-y-2 text-sm text-gray-600">
+                          <div className="flex items-center gap-2">
+                            <Clock className="w-4 h-4" />
+                            <span>10:00 PM - Departure from Delhi</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <MapPin className="w-4 h-4" />
+                            <span>Pickup: Kashmiri Gate / Noida / Ghaziabad</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Bus className="w-4 h-4" />
+                            <span>Overnight journey in deluxe AC bus</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Day 2 - Sunday Morning Haridwar */}
+                <div className="relative">
+                  <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-blue-200 ml-4"></div>
+                  
+                  <div className="relative flex items-start gap-4">
+                    <div className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-semibold z-10">
+                      2
+                    </div>
+                    <div className="flex-1">
+                      <div className="bg-blue-50 rounded-lg p-4">
+                        <h3 className="font-semibold text-gray-900 mb-2">Sunday Early Morning - Haridwar</h3>
+                        <div className="space-y-2 text-sm text-gray-600">
+                          <div className="flex items-center gap-2">
+                            <Clock className="w-4 h-4" />
+                            <span>4:00 AM - 7:00 AM - Ganga Arti at Har Ki Pauri</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <MapPin className="w-4 h-4" />
+                            <span>Har Ki Pauri, Mansa Devi Temple</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Utensils className="w-4 h-4" />
+                            <span>Breakfast at local restaurant</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Day 2 - Sunday Morning Rishikesh */}
+                <div className="relative">
+                  <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-blue-200 ml-4"></div>
+                  
+                  <div className="relative flex items-start gap-4">
+                    <div className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-semibold z-10">
+                      3
+                    </div>
+                    <div className="flex-1">
+                      <div className="bg-blue-50 rounded-lg p-4">
+                        <h3 className="font-semibold text-gray-900 mb-2">Sunday Morning - Rishikesh</h3>
+                        <div className="space-y-2 text-sm text-gray-600">
+                          <div className="flex items-center gap-2">
+                            <Clock className="w-4 h-4" />
+                            <span>8:00 AM - 1:00 PM - Rishikesh Temple Tour</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <MapPin className="w-4 h-4" />
+                            <span>Lakshman Jhula, Ram Jhula, Parmarth Niketan</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Camera className="w-4 h-4" />
+                            <span>Ganga beach and yoga center visit</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Day 2 - Sunday Afternoon Neelkanth */}
+                <div className="relative">
+                  <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-blue-200 ml-4"></div>
+                  
+                  <div className="relative flex items-start gap-4">
+                    <div className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-semibold z-10">
+                      4
+                    </div>
+                    <div className="flex-1">
+                      <div className="bg-blue-50 rounded-lg p-4">
+                        <h3 className="font-semibold text-gray-900 mb-2">Sunday Afternoon - Neelkanth Mahadev</h3>
+                        <div className="space-y-2 text-sm text-gray-600">
+                          <div className="flex items-center gap-2">
+                            <Clock className="w-4 h-4" />
+                            <span>2:00 PM - 6:00 PM - Neelkanth Temple Visit</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <MapPin className="w-4 h-4" />
+                            <span>Neelkanth Mahadev Temple, Himalayan foothills</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Utensils className="w-4 h-4" />
+                            <span>Lunch at Rishikesh's famous restaurant</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Day 2 - Return Journey */}
+                <div className="relative">
+                  <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-blue-200 ml-4"></div>
+                  
+                  <div className="relative flex items-start gap-4">
+                    <div className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-semibold z-10">
+                      5
+                    </div>
+                    <div className="flex-1">
+                      <div className="bg-blue-50 rounded-lg p-4">
+                        <h3 className="font-semibold text-gray-900 mb-2">Sunday Night - Return Journey</h3>
+                        <div className="space-y-2 text-sm text-gray-600">
+                          <div className="flex items-center gap-2">
+                            <Clock className="w-4 h-4" />
+                            <span>8:00 PM - Departure from Rishikesh</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Bus className="w-4 h-4" />
+                            <span>Overnight journey back to Delhi</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Day 3 - Monday Arrival */}
+                <div className="relative">
+                  <div className="relative flex items-start gap-4">
+                    <div className="bg-green-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-semibold z-10">
+                      ✓
+                    </div>
+                    <div className="flex-1">
+                      <div className="bg-green-50 rounded-lg p-4">
+                        <h3 className="font-semibold text-gray-900 mb-2">Monday Morning - Arrival</h3>
+                        <div className="space-y-2 text-sm text-gray-600">
+                          <div className="flex items-center gap-2">
+                            <Clock className="w-4 h-4" />
+                            <span>6:00 AM - 7:00 AM - Arrival in Delhi</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <MapPin className="w-4 h-4" />
+                            <span>Drop at same pickup points</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Inclusions Tab */}
+        {activeTab === "inclusions" && (
+          <div className="max-w-4xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* What's Included */}
+              <div className="bg-white rounded-xl shadow-sm p-6">
+                <h3 className="text-xl font-bold mb-4 text-gray-900">What's Included</h3>
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3">
+                    <Check className="w-5 h-5 text-green-600 mt-0.5" />
+                    <div>
+                      <h4 className="font-semibold text-gray-900">Deluxe AC Bus Transportation</h4>
+                      <p className="text-sm text-gray-600">Comfortable push-back seats with experienced drivers</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <Check className="w-5 h-5 text-green-600 mt-0.5" />
+                    <div>
+                      <h4 className="font-semibold text-gray-900">Meals</h4>
+                      <p className="text-sm text-gray-600">Breakfast and lunch at quality restaurants in Rishikesh</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <Check className="w-5 h-5 text-green-600 mt-0.5" />
+                    <div>
+                      <h4 className="font-semibold text-gray-900">Temple Darshan</h4>
+                      <p className="text-sm text-gray-600">Priority darshan assistance at all temples</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <Check className="w-5 h-5 text-green-600 mt-0.5" />
+                    <div>
+                      <h4 className="font-semibold text-gray-900">Tour Coordinator</h4>
+                      <p className="text-sm text-gray-600">Professional guide throughout the journey</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <Check className="w-5 h-5 text-green-600 mt-0.5" />
+                    <div>
+                      <h4 className="font-semibold text-gray-900">Ropeway Charges</h4>
+                      <p className="text-sm text-gray-600">Mansa Devi temple ropeway included</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* What's Not Included */}
+              <div className="bg-white rounded-xl shadow-sm p-6">
+                <h3 className="text-xl font-bold mb-4 text-gray-900">What's Not Included</h3>
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3">
+                    <X className="w-5 h-5 text-red-600 mt-0.5" />
+                    <div>
+                      <h4 className="font-semibold text-gray-900">Personal Expenses</h4>
+                      <p className="text-sm text-gray-600">Shopping, additional snacks, and personal items</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <X className="w-5 h-5 text-red-600 mt-0.5" />
+                    <div>
+                      <h4 className="font-semibold text-gray-900">Special Puja</h4>
+                      <p className="text-sm text-gray-600">Any special puja or ritual charges</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <X className="w-5 h-5 text-red-600 mt-0.5" />
+                    <div>
+                      <h4 className="font-semibold text-gray-900">Donations</h4>
+                      <p className="text-sm text-gray-600">Temple donations or offerings</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <X className="w-5 h-5 text-red-600 mt-0.5" />
+                    <div>
+                      <h4 className="font-semibold text-gray-900">Neelkanth Ropeway</h4>
+                      <p className="text-sm text-gray-600">Cable car charges at Neelkanth</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <X className="w-5 h-5 text-red-600 mt-0.5" />
+                    <div>
+                      <h4 className="font-semibold text-gray-900">Travel Insurance</h4>
+                      <p className="text-sm text-gray-600">Personal travel insurance</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Things to Carry */}
+            <div className="bg-white rounded-xl shadow-sm p-6 mt-6">
+              <h3 className="text-xl font-bold mb-4 text-gray-900">Things to Carry</h3>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <Check className="w-4 h-4 text-green-600" />
+                    <span>Valid ID proof (Aadhar/Voter/Passport)</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <Check className="w-4 h-4 text-green-600" />
+                    <span>Comfortable walking shoes</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <Check className="w-4 h-4 text-green-600" />
+                    <span>Light woolen clothes (for early morning)</span>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <Check className="w-4 h-4 text-green-600" />
+                    <span>Personal medication</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <Check className="w-4 h-4 text-green-600" />
+                    <span>Mobile phone with power bank</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <Check className="w-4 h-4 text-green-600" />
+                    <span>Water bottle and light snacks</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Booking Tab */}
+        {activeTab === "booking" && (
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <h2 className="text-2xl font-bold mb-6 text-gray-900">Book Your Ganga Yatra Tour</h2>
+              
+              <div className="grid md:grid-cols-2 gap-8">
+                {/* Booking Form */}
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Select Travel Date
+                    </label>
+                    <select
+                      value={selectedDate}
+                      onChange={(e) => setSelectedDate(e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <option value="">Choose a date</option>
+                      {tourData?.dates?.map((date: any) => (
+                        <option key={date.id} value={date.id}>
+                          {new Date(date.date).toLocaleDateString('en-IN', {
+                            weekday: 'long',
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric'
+                          })} - {date.availableSeats} seats available
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Number of Passengers
+                    </label>
+                    <div className="flex items-center gap-4">
+                      <button
+                        onClick={() => setPassengers(Math.max(1, passengers - 1))}
+                        className="w-12 h-12 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-50 text-lg font-semibold"
+                      >
+                        -
+                      </button>
+                      <div className="flex-1 text-center">
+                        <div className="text-2xl font-bold text-gray-900">{passengers}</div>
+                        <div className="text-sm text-gray-500">Passengers</div>
+                      </div>
+                      <button
+                        onClick={() => setPassengers(Math.min(6, passengers + 1))}
+                        className="w-12 h-12 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-50 text-lg font-semibold"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <h3 className="font-semibold text-gray-900 mb-2">Price Details</h3>
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">Price per person</span>
+                        <span className="font-medium">₹2,100</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">Number of passengers</span>
+                        <span className="font-medium">× {passengers}</span>
+                      </div>
+                      <div className="border-t pt-2 flex justify-between">
+                        <span className="font-semibold text-gray-900">Total Amount</span>
+                        <span className="font-bold text-blue-600 text-xl">₹{2100 * passengers}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={handleBookNow}
+                    className="w-full bg-blue-600 text-white py-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors text-lg"
+                  >
+                    Proceed to Booking
+                  </button>
+
+                  <div className="text-center text-sm text-gray-500">
+                    <div className="flex items-center justify-center gap-2 mb-2">
+                      <Shield className="w-4 h-4" />
+                      <span>100% Secure Booking</span>
+                    </div>
+                    <div>Free cancellation up to 24 hours before departure</div>
+                  </div>
+                </div>
+
+                {/* Booking Information */}
+                <div className="space-y-6">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h3 className="font-semibold text-blue-900 mb-2">Booking Information</h3>
+                    <ul className="text-sm text-blue-800 space-y-1">
+                      <li>• Confirmation will be sent via email and SMS</li>
+                      <li>• Carry original ID proof during travel</li>
+                      <li>• Reporting time 30 minutes before departure</li>
+                      <li>• Pickup details will be shared after booking</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <h3 className="font-semibold text-green-900 mb-2">Payment Options</h3>
+                    <ul className="text-sm text-green-800 space-y-1">
+                      <li>• Credit/Debit Cards</li>
+                      <li>• UPI Payments</li>
+                      <li>• Net Banking</li>
+                      <li>• Wallet Payments</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                    <h3 className="font-semibold text-amber-900 mb-2">Need Help?</h3>
+                    <div className="flex items-center gap-2 text-sm text-amber-800">
+                      <Phone className="w-4 h-4" />
+                      <span>Call us: +91 98765 43210</span>
+                    </div>
+                    <div className="text-sm text-amber-800 mt-1">
+                      Email: support@weekenddarshan.com
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

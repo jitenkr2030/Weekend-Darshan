@@ -100,7 +100,9 @@ export default function TripDetailsPage() {
     )
   }
 
-  const boardingPoints = JSON.parse(trip.boardingPoints || '[]')
+  const boardingPoints = JSON.parse(trip.boardingPoints || '[]').map((point: any) => 
+      typeof point === 'string' ? point : point.name || `${point.name}, ${point.address}`
+    )
   const inclusions = JSON.parse(trip.inclusions || '[]')
   const exclusions = JSON.parse(trip.exclusions || '[]')
   const cancellationPolicy = JSON.parse(trip.cancellationPolicy || '{}')

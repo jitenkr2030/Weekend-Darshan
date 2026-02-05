@@ -71,7 +71,9 @@ export default function BookingPage() {
       if (data.success) {
         setTrip(data.data)
         // Set default boarding point
-        const boardingPoints = JSON.parse(data.data.boardingPoints || '[]')
+        const boardingPoints = JSON.parse(data.data.boardingPoints || '[]').map((point: any) => 
+          typeof point === 'string' ? point : point.name || `${point.name}, ${point.address}`
+        )
         if (boardingPoints.length > 0) {
           setSelectedBoardingPoint(boardingPoints[0])
         }
@@ -237,7 +239,9 @@ export default function BookingPage() {
     )
   }
 
-  const boardingPoints = JSON.parse(trip.boardingPoints || '[]')
+  const boardingPoints = JSON.parse(trip.boardingPoints || '[]').map((point: any) => 
+      typeof point === 'string' ? point : point.name || `${point.name}, ${point.address}`
+    )
   const maxSeats = Math.min(6, trip.availableSeats) // Max 6 seats per booking
 
   return (

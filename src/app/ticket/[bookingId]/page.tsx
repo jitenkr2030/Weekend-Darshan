@@ -105,7 +105,9 @@ export default function TicketPage() {
   }
 
   const passengers = JSON.parse(booking.passengerDetails || '[]')
-  const boardingPoints = JSON.parse(booking.trip.boardingPoints || '[]')
+  const boardingPoints = JSON.parse(booking.trip.boardingPoints || '[]').map((point: any) => 
+      typeof point === 'string' ? point : point.name || `${point.name}, ${point.address}`
+    )
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50">
