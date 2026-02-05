@@ -20,20 +20,25 @@ To allow users to **easily discover, book, and travel** on **weekend religious t
 ## ✨ Features Implemented
 
 ### 👥 User-Side Features
+- ✅ **User Authentication**: Mobile/OTP-based login system
 - ✅ **Trip Discovery**: Browse upcoming weekend trips with detailed information
 - ✅ **Trip Details**: Comprehensive trip information with inclusions, exclusions, and policies
 - ✅ **Seat Booking**: Multi-passenger booking with detailed passenger information
 - ✅ **Payment System**: Secure payment integration with UPI/Card support
 - ✅ **Digital Tickets**: QR code-based booking confirmation and tickets
 - ✅ **My Bookings**: View and manage all bookings with search functionality
+- ✅ **Notifications**: Real-time updates and alerts
 - ✅ **Responsive Design**: Mobile-first design that works on all devices
 
 ### 🧑‍💼 Admin Panel Features
 - ✅ **Admin Authentication**: Secure admin login system
 - ✅ **Dashboard**: Overview of trips, bookings, and revenue
-- ✅ **Trip Management**: View and manage all trips
-- ✅ **Booking Management**: Monitor and manage user bookings
+- ✅ **Trip Management**: Full CRUD operations for trips
+- ✅ **Booking Management**: View, manage, and cancel bookings
+- ✅ **Reports & Analytics**: Comprehensive reports with CSV export
 - ✅ **Real-time Statistics**: Track revenue, occupancy, and performance
+- ✅ **Payment Management**: Confirm payments and process refunds
+- ✅ **Customer Management**: View customer details and booking history
 
 ---
 
