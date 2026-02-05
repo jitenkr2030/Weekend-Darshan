@@ -69,14 +69,14 @@ async function main() {
       templeId: khatuShyam.id, // Primary temple
       title: '🔱 Premium Combo: Khatu Shyam ji + Salasar Balaji + Mandawa',
       description: 'Experience the perfect blend of spirituality and culture with our premium weekend tour. Visit two powerful temples and explore the heritage town of Mandawa in one comprehensive journey.',
-      departureDate: new Date('2024-12-14T22:00:00Z'), // Saturday 10:00 PM
-      returnDate: new Date('2024-12-16T05:30:00Z'), // Monday 5:30 AM
+      departureDate: new Date('2026-02-07T22:00:00Z'), // This Saturday 10:00 PM
+      returnDate: new Date('2026-02-09T05:30:00Z'), // Monday 5:30 AM
       departureTime: '22:00',
       returnTime: '05:30',
       totalSeats: 45,
       availableSeats: 28,
-      pricePerSeat: 2899,
-      advancePrice: 999,
+      pricePerSeat: 2000,
+      advancePrice: 500,
       busType: 'Premium AC Push-Back',
       boardingPoints: JSON.stringify([
         {
@@ -124,9 +124,11 @@ async function main() {
 
   // Create additional dates for the premium tour
   const futureDates = [
-    '2024-12-21T22:00:00Z', // Next Saturday
-    '2024-12-28T22:00:00Z', // Following Saturday
-    '2025-01-04T22:00:00Z', // New Year weekend
+    '2026-02-07T22:00:00Z', // This Saturday
+    '2026-02-14T22:00:00Z', // Next Saturday
+    '2026-02-21T22:00:00Z', // Following Saturday
+    '2026-02-28T22:00:00Z', // End of month
+    '2026-03-07T22:00:00Z', // Next month
   ]
 
   for (const date of futureDates) {
@@ -147,8 +149,8 @@ async function main() {
         returnTime: '05:30',
         totalSeats: 45,
         availableSeats: Math.floor(Math.random() * 20) + 15,
-        pricePerSeat: 2899,
-        advancePrice: 999,
+        pricePerSeat: 2000,
+        advancePrice: 500,
         busType: 'Premium AC Push-Back',
         boardingPoints: premiumTrip.boardingPoints,
         inclusions: premiumTrip.inclusions,

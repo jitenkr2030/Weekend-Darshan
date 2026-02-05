@@ -164,7 +164,7 @@ export default function Home() {
               <div className="text-sm text-white/80">Sacred Destinations</div>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-              <div className="text-2xl font-bold">₹2,899</div>
+              <div className="text-2xl font-bold">₹2,000</div>
               <div className="text-sm text-white/80">Per Person</div>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
