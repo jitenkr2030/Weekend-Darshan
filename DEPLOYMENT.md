@@ -1,203 +1,92 @@
-# 🚀 Vercel Deployment Guide for WeekendDarshan
+# WeekendDarshan - Deployment Guide
 
-This guide will help you deploy the WeekendDarshan platform to Vercel with proper database configuration.
+## Environment Variables Configuration
 
-## 📋 Prerequisites
+### For Vercel Deployment:
 
-1. **Vercel Account**: Sign up at [vercel.com](https://vercel.com)
-2. **GitHub Repository**: Your code should be pushed to GitHub
-3. **Environment Variables**: Have your secrets ready
+1. **Go to your Vercel Project Settings**
+2. **Navigate to Environment Variables**
+3. **Add the following variables:**
 
-## 🔧 Step 1: Set Up Environment Variables in Vercel
+#### Required Variables:
+```
+DATABASE_URL=file:./db/custom.db
+NEXTAUTH_URL=https://your-domain.vercel.app
+NEXTAUTH_SECRET=your-secure-secret-key-here
+```
 
-Go to your Vercel dashboard → Project Settings → Environment Variables and add:
+#### Optional Variables (for production):
+```
+RAZORPAY_KEY_ID=your-razorpay-production-key
+RAZORPAY_KEY_SECRET=your-razorpay-production-secret
+```
 
-### Required Variables
+### For Other Platforms (Railway, Render, etc.):
+
+Use the same environment variables as above.
+
+## Database Configuration
+
+### Option 1: SQLite (Default - Good for Development/Small Scale)
+```
+DATABASE_URL=file:./db/custom.db
+```
+
+### Option 2: PostgreSQL (Recommended for Production)
+```
+DATABASE_URL=postgresql://username:password@host:port/database
+```
+
+## Deployment Steps
+
+### 1. Push Latest Changes
 ```bash
-DATABASE_URL="file:./dev.db"
-NEXTAUTH_URL="https://your-domain.vercel.app"
-NEXTAUTH_SECRET="your-secure-secret-key-here"
-JWT_SECRET="your-jwt-secret-here"
+git add .
+git commit -m "Add deployment configuration"
+git push origin main
 ```
 
-### Optional Variables (for full functionality)
-```bash
-RAZORPAY_KEY_ID="your-razorpay-key-id"
-RAZORPAY_KEY_SECRET="your-razorpay-key-secret"
-TWILIO_ACCOUNT_SID="your-twilio-account-sid"
-TWILIO_AUTH_TOKEN="your-twilio-auth-token"
-TWILIO_PHONE_NUMBER="your-twilio-phone-number"
-RESEND_API_KEY="your-resend-api-key"
-FROM_EMAIL="noreply@weekenddarshan.com"
-```
+### 2. Configure Environment Variables
+- Add all required environment variables to your deployment platform
+- Make sure `DATABASE_URL` is set correctly
 
-## 🗄️ Step 2: Database Setup for Production
+### 3. Deploy
+- Connect your repository to the deployment platform
+- Trigger a new deployment
+- Monitor the build process
 
-### Option A: Use Vercel Postgres (Recommended)
-1. In Vercel dashboard, go to Storage → Create Database
-2. Select Postgres
-3. Update your `DATABASE_URL` with the provided connection string
-4. Update `prisma/schema.prisma`:
-```prisma
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-```
+## Troubleshooting
 
-### Option B: Use SQLite with Vercel KV (Current Setup)
-1. Keep the current SQLite setup
-2. Use `DATABASE_URL="file:./dev.db"`
-3. Note: SQLite will be reset on each deployment
+### Error: "Environment Variable DATABASE_URL references Secret database_url, which does not exist"
+**Solution:** 
+- Go to your deployment platform's dashboard
+- Add `DATABASE_URL` as an environment variable (not as a secret reference)
+- Use the direct value: `file:./db/custom.db` or your PostgreSQL connection string
 
-## 🏗️ Step 3: Deploy to Vercel
+### Error: "Prisma schema not found"
+**Solution:**
+- Ensure `prisma generate` runs during build
+- The `vercel-build` script in package.json handles this
 
-### Option A: Through Vercel CLI
-```bash
-# Install Vercel CLI
-npm install -g vercel
+### Error: "Database connection failed"
+**Solution:**
+- Verify DATABASE_URL is correctly set
+- For production, consider using PostgreSQL instead of SQLite
+- Ensure database is accessible from your deployment environment
 
-# Login to Vercel
-vercel login
+## Production Considerations
 
-# Deploy
-vercel --prod
-```
+1. **Database:** Use PostgreSQL for better performance and reliability
+2. **Environment:** Use strong, unique secrets
+3. **Domain:** Configure custom domain if needed
+4. **Monitoring:** Set up error monitoring and logging
+5. **Backups:** Regular database backups (if using external database)
 
-### Option B: Through GitHub Integration
-1. Connect your GitHub repository to Vercel
-2. Vercel will automatically deploy on push to main branch
-3. Configure build settings:
-   - **Build Command**: `npm run vercel-build`
-   - **Output Directory**: `.next`
-   - **Install Command**: `npm install`
+## Current Configuration
 
-## 🔍 Step 4: Verify Deployment
-
-1. **Check Build Logs**: Ensure no errors during build
-2. **Test API Endpoints**: Visit `/api/trips` to test database connection
-3. **Test Frontend**: Verify the application loads properly
-4. **Test Booking Flow**: Complete a test booking
-
-## 🛠️ Step 5: Database Seeding (Important!)
-
-Since SQLite is used, you need to seed the database after deployment:
-
-### Option A: Automatic Seeding
-Create a new API endpoint `/api/seed`:
-```typescript
-// src/app/api/seed/route.ts
-import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/db'
-import { seedData } from '@/seed'
-
-export async function POST(request: NextRequest) {
-  try {
-    await seedData()
-    return NextResponse.json({ success: true, message: 'Database seeded successfully' })
-  } catch (error) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 })
-  }
-}
-```
-
-### Option B: Manual Seeding
-1. Access your Vercel project logs
-2. Find the function URL and call the seed endpoint
-3. Or use Vercel CLI to run commands
-
-## 🐛 Common Issues & Solutions
-
-### Issue 1: DATABASE_URL not found
-**Solution**: Ensure `DATABASE_URL` is set in Vercel environment variables
-
-### Issue 2: Prisma Client Initialization Error
-**Solution**: Add `postinstall` script to package.json:
-```json
-{
-  "scripts": {
-    "postinstall": "prisma generate"
-  }
-}
-```
-
-### Issue 3: Database connection timeout
-**Solution**: For SQLite, ensure the database file is created:
-```typescript
-// In your API routes, add:
-import { PrismaClient } from '@prisma/client'
-import { exec } from 'child_process'
-
-const prisma = new PrismaClient()
-
-// Ensure database exists
-if (process.env.NODE_ENV === 'production') {
-  exec('touch ./dev.db')
-}
-```
-
-### Issue 4: Build fails on Prisma generate
-**Solution**: Update vercel.json:
-```json
-{
-  "build": {
-    "env": {
-      "PRISMA_GENERATE_DATAPROXY": "true"
-    }
-  }
-}
-```
-
-## 📊 Monitoring & Maintenance
-
-### Check Application Health
-- Visit `/api/trips` - Should return trip data
-- Visit `/api/health` - Create a health check endpoint
-- Monitor Vercel function logs
-
-### Database Backups
-- For SQLite: Download database file regularly
-- For Postgres: Use Vercel's automatic backups
-
-## 🚀 Production Optimizations
-
-### 1. Enable Caching
-```typescript
-// In API routes, add caching headers
-export async function GET() {
-  const data = await db.trip.findMany()
-  
-  return NextResponse.json(data, {
-    headers: {
-      'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=30'
-    }
-  })
-}
-```
-
-### 2. Optimize Images
-```typescript
-import Image from 'next/image'
-
-// Use Next.js Image component for all images
-<Image src="/logo.svg" alt="WeekendDarshan" width={120} height={40} />
-```
-
-### 3. Enable Analytics
-Add Google Analytics or Vercel Analytics to track performance
-
-## 📞 Support
-
-If you encounter issues:
-1. Check Vercel deployment logs
-2. Verify environment variables
-3. Test API endpoints individually
-4. Check this guide for common solutions
-
-## 🎉 Success!
-
-Once deployed, your WeekendDarshan platform will be available at:
-- **Main Site**: `https://your-domain.vercel.app`
-- **Admin Panel**: `https://your-domain.vercel.app/admin/login`
-
-Your platform is now live and ready to accept bookings! 🚌✨
+The project is configured with:
+- ✅ Vercel-compatible build scripts
+- ✅ Environment variable templates
+- ✅ Prisma client generation
+- ✅ Standalone build output
+- ✅ Production-ready Next.js configuration
