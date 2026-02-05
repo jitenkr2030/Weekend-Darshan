@@ -19,7 +19,8 @@ import {
   Eye,
   Download,
   LogOut,
-  MapPin
+  MapPin,
+  BarChart3
 } from 'lucide-react'
 import { toast } from '@/hooks/use-toast'
 import { format } from 'date-fns'
@@ -205,11 +206,23 @@ export default function AdminDashboard() {
           </div>
 
           {/* Quick Actions */}
-          <div className="flex gap-4">
-            <Link href="/admin/trips/new">
+          <div className="flex flex-wrap gap-4">
+            <Link href="/admin/trips">
               <Button>
                 <Plus className="h-4 w-4 mr-2" />
-                Add New Trip
+                Manage Trips
+              </Button>
+            </Link>
+            <Link href="/admin/bookings">
+              <Button variant="outline">
+                <Users className="h-4 w-4 mr-2" />
+                Manage Bookings
+              </Button>
+            </Link>
+            <Link href="/admin/reports">
+              <Button variant="outline">
+                <BarChart3 className="h-4 w-4 mr-2" />
+                View Reports
               </Button>
             </Link>
             <Button variant="outline" onClick={fetchDashboardData}>

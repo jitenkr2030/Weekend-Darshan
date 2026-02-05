@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     // Create response and clear auth cookie
     const response = NextResponse.json({
@@ -12,13 +12,13 @@ export async function POST(request: NextRequest) {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 0 // Immediately expire
+      maxAge: 0
     })
 
     return response
 
   } catch (error) {
-    console.error('Error during logout:', error)
+    console.error('Error logging out:', error)
     return NextResponse.json(
       { success: false, error: 'Failed to logout' },
       { status: 500 }

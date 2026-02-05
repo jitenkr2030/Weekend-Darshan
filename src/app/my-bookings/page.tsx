@@ -40,12 +40,22 @@ export default function MyBookingsPage() {
   const fetchBookings = async () => {
     try {
       setLoading(true)
-      const response = await fetch('/api/bookings?userId=guest-user')
+      const response = await fetch('/api/bookings')
       const data = await response.json()
       
       if (data.success) {
         setBookings(data.data)
       } else {
+        if (response.status === 401) {
+          // User not authenticated, redirect to login
+          toast({
+            title: 'Login Required',
+            description: 'Please login to view your bookings',
+            variant: 'destructive'
+          })
+          router.push('/')
+          return
+        }
         throw new Error(data.error || 'Failed to fetch bookings')
       }
     } catch (error) {

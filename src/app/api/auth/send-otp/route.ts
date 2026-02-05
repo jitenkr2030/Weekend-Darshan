@@ -1,25 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 
-// In a real application, you would use an SMS service like Twilio, AWS SNS, etc.
-// For demo purposes, we'll simulate OTP sending
-const generateOTP = () => {
+// Generate 6-digit OTP
+function generateOTP(): string {
   return Math.floor(100000 + Math.random() * 900000).toString()
-}
-
-const sendOTP = async (mobile: string, otp: string) => {
-  // Simulate OTP sending - in production, integrate with SMS service
-  console.log(`OTP for ${mobile}: ${otp}`)
-  
-  // For demo, return success immediately
-  // In production, you would:
-  // await twilioClient.messages.create({
-  //   body: `Your WeekendDarshan OTP is: ${otp}`,
-  //   from: process.env.TWILIO_PHONE_NUMBER,
-  //   to: `+91${mobile}`
-  // })
-  
-  return { success: true, message: 'OTP sent successfully' }
 }
 
 export async function POST(request: NextRequest) {
@@ -28,46 +12,51 @@ export async function POST(request: NextRequest) {
 
     if (!mobile || !/^\d{10}$/.test(mobile)) {
       return NextResponse.json(
-        { success: false, error: 'Valid 10-digit mobile number is required' },
+        { success: false, error: 'Valid 10-digit mobile number required' },
         { status: 400 }
       )
     }
 
+    // Check if user exists, if not create one
+    let user = await db.user.findUnique({
+      where: { mobile }
+    })
+
+    if (!user) {
+      user = await db.user.create({
+        data: {
+          mobile,
+          isVerified: false
+        }
+      })
+    }
+
     // Generate OTP
     const otp = generateOTP()
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000) // 10 minutes
+    const otpExpiry = new Date(Date.now() + 10 * 60 * 1000) // 10 minutes
 
-    // Store or update user with OTP
-    const user = await db.user.upsert({
-      where: { mobile },
-      update: {
-        otp,
-        otpExpiresAt: expiresAt,
-        isVerified: false
-      },
-      create: {
-        mobile,
-        otp,
-        otpExpiresAt: expiresAt,
-        isVerified: false
+    // In production, send OTP via SMS service
+    // For demo, we'll log it (in production, use SMS gateway)
+    console.log(`OTP for ${mobile}: ${otp}`)
+
+    // Store OTP in user record (in production, use separate OTP table)
+    await db.user.update({
+      where: { id: user.id },
+      data: {
+        // Note: In production, store OTP hash and use separate table
+        // For demo, we're using a simple approach
       }
     })
 
-    // Send OTP
-    const otpResult = await sendOTP(mobile, otp)
-
-    if (!otpResult.success) {
-      return NextResponse.json(
-        { success: false, error: 'Failed to send OTP' },
-        { status: 500 }
-      )
-    }
+    // Store OTP in memory for demo (in production, use Redis or database)
+    global.otpStore = global.otpStore || new Map()
+    global.otpStore.set(mobile, { otp, expiry: otpExpiry })
 
     return NextResponse.json({
       success: true,
       message: 'OTP sent successfully',
-      // For demo purposes, include OTP in response (remove in production)
-      otp: process.env.NODE_ENV === 'development' ? otp : undefined
+      // For demo only, remove in production
+      demoOTP: process.env.NODE_ENV === 'development' ? otp : undefined
     })
 
   } catch (error) {

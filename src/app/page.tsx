@@ -9,8 +9,8 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Search, Filter, Calendar, MapPin, Bus, Users, Star, Phone, User, LogOut } from 'lucide-react'
 import { toast } from '@/hooks/use-toast'
-import { useAuth } from '@/contexts/AuthContext'
-import { AuthModal } from '@/components/auth/AuthModal'
+import { useAuth } from '@/contexts/auth-context'
+import { LoginModal } from '@/components/auth/login-modal'
 
 export default function Home() {
   const [trips, setTrips] = useState<Trip[]>([])
@@ -324,7 +324,7 @@ export default function Home() {
       </footer>
 
       {/* Auth Modal */}
-      <AuthModal 
+      <LoginModal 
         isOpen={isAuthModalOpen} 
         onClose={() => setIsAuthModalOpen(false)} 
       />

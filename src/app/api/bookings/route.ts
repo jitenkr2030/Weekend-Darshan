@@ -1,17 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { verify } from 'jsonwebtoken'
+import { jwtVerify } from 'jose'
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'
+const JWT_SECRET = new TextEncoder().encode(
+  process.env.NEXTAUTH_SECRET || 'fallback-secret-key'
+)
 
 // Helper function to get user from token
-const getUserFromToken = (request: NextRequest) => {
+const getUserFromToken = async (request: NextRequest) => {
   const token = request.cookies.get('auth-token')?.value
   if (!token) return null
   
   try {
-    const decoded = verify(token, JWT_SECRET) as any
-    return decoded
+    const { payload } = await jwtVerify(token, JWT_SECRET)
+    return payload
   } catch (error) {
     return null
   }
@@ -23,7 +25,7 @@ export async function POST(request: NextRequest) {
     const { tripId, passengerCount, passengerDetails, totalAmount, advanceAmount, boardingPoint } = body
 
     // Get authenticated user
-    const user = getUserFromToken(request)
+    const user = await getUserFromToken(request)
     if (!user) {
       return NextResponse.json(
         { success: false, error: 'Authentication required' },
@@ -134,13 +136,25 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
+    // Get authenticated user
+    const user = await getUserFromToken(request)
+    if (!user) {
+      return NextResponse.json(
+        { success: false, error: 'Authentication required' },
+        { status: 401 }
+      )
+    }
+
     const { searchParams } = new URL(request.url)
-    const userId = searchParams.get('userId')
     const status = searchParams.get('status')
 
-    let whereClause: any = {}
-    if (userId) whereClause.userId = userId
-    if (status) whereClause.bookingStatus = status
+    let whereClause: any = {
+      userId: user.userId
+    }
+    
+    if (status) {
+      whereClause.bookingStatus = status
+    }
 
     const bookings = await db.booking.findMany({
       where: whereClause,

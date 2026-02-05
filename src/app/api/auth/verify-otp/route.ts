@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { sign } from 'jsonwebtoken'
+import { SignJWT, jwtVerify } from 'jose'
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'
+const JWT_SECRET = new TextEncoder().encode(
+  process.env.NEXTAUTH_SECRET || 'fallback-secret-key'
+)
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,61 +12,81 @@ export async function POST(request: NextRequest) {
 
     if (!mobile || !otp) {
       return NextResponse.json(
-        { success: false, error: 'Mobile number and OTP are required' },
+        { success: false, error: 'Mobile number and OTP required' },
         { status: 400 }
       )
     }
 
-    // Find user with valid OTP
-    const user = await db.user.findFirst({
-      where: {
-        mobile,
-        otp,
-        otpExpiresAt: {
-          gt: new Date()
-        }
-      }
+    // Get stored OTP
+    global.otpStore = global.otpStore || new Map()
+    const storedOTPData = global.otpStore.get(mobile)
+
+    if (!storedOTPData) {
+      return NextResponse.json(
+        { success: false, error: 'OTP not found or expired' },
+        { status: 400 }
+      )
+    }
+
+    // Check if OTP is expired
+    if (new Date() > storedOTPData.expiry) {
+      global.otpStore.delete(mobile)
+      return NextResponse.json(
+        { success: false, error: 'OTP expired' },
+        { status: 400 }
+      )
+    }
+
+    // Verify OTP
+    if (storedOTPData.otp !== otp) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid OTP' },
+        { status: 400 }
+      )
+    }
+
+    // Find or create user
+    let user = await db.user.findUnique({
+      where: { mobile }
     })
 
     if (!user) {
       return NextResponse.json(
-        { success: false, error: 'Invalid or expired OTP' },
-        { status: 400 }
+        { success: false, error: 'User not found' },
+        { status: 404 }
       )
     }
 
-    // Mark user as verified and clear OTP
-    const updatedUser = await db.user.update({
+    // Mark user as verified
+    user = await db.user.update({
       where: { id: user.id },
-      data: {
-        isVerified: true,
-        otp: null,
-        otpExpiresAt: null
-      }
+      data: { isVerified: true }
     })
 
+    // Clear OTP
+    global.otpStore.delete(mobile)
+
     // Generate JWT token
-    const token = sign(
-      { 
-        userId: user.id, 
-        mobile: user.mobile,
-        isAdmin: user.isAdmin 
-      },
-      JWT_SECRET,
-      { expiresIn: '7d' }
-    )
+    const token = await new SignJWT({
+      userId: user.id,
+      mobile: user.mobile,
+      isAdmin: user.isAdmin
+    })
+      .setProtectedHeader({ alg: 'HS256' })
+      .setIssuedAt()
+      .setExpirationTime('7d')
+      .sign(JWT_SECRET)
 
     // Create response
     const response = NextResponse.json({
       success: true,
       message: 'Login successful',
       user: {
-        id: updatedUser.id,
-        mobile: updatedUser.mobile,
-        name: updatedUser.name,
-        email: updatedUser.email,
-        isAdmin: updatedUser.isAdmin,
-        isVerified: updatedUser.isVerified
+        id: user.id,
+        mobile: user.mobile,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin
       }
     })
 
@@ -73,7 +95,7 @@ export async function POST(request: NextRequest) {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 // 7 days
+      maxAge: 7 * 24 * 60 * 60, // 7 days
     })
 
     return response
