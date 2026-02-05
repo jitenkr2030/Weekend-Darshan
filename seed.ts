@@ -30,7 +30,7 @@ async function main() {
     },
   })
 
-  // Create temples for the premium combo
+  // Create temples for the premium combo tours
   const khatuShyam = await prisma.temple.create({
     data: {
       name: 'Khatu Shyam Ji',
@@ -53,7 +53,153 @@ async function main() {
     },
   })
 
-  // Create route for the premium combo
+  // Create temples for the Braj Yatra tour
+  const krishnaJanmabhoomi = await prisma.temple.create({
+    data: {
+      name: 'Shri Krishna Janmabhoomi Temple',
+      description: 'Birthplace of Lord Krishna, one of the most sacred pilgrimage sites for Hindus',
+      city: 'Mathura',
+      state: 'Uttar Pradesh',
+      image: '/images/temples/krishna-janmabhoomi.jpg',
+      isActive: true,
+    },
+  })
+
+  const bankeBihari = await prisma.temple.create({
+    data: {
+      name: 'Banke Bihari Ji Temple',
+      description: 'Ancient temple dedicated to Lord Krishna in his Banke Bihari form',
+      city: 'Vrindavan',
+      state: 'Uttar Pradesh',
+      image: '/images/temples/banke-bihari.jpg',
+      isActive: true,
+    },
+  })
+
+  const iskconVrindavan = await prisma.temple.create({
+    data: {
+      name: 'ISKCON Temple Vrindavan',
+      description: 'Beautiful Krishna temple built by ISKCON, known for its spiritual atmosphere',
+      city: 'Vrindavan',
+      state: 'Uttar Pradesh',
+      image: '/images/temples/iskcon-vrindavan.jpg',
+      isActive: true,
+    },
+  })
+
+  const premMandir = await prisma.temple.create({
+    data: {
+      name: 'Prem Mandir',
+      description: 'Stunning white marble temple dedicated to Radha-Krishna, illuminated beautifully at night',
+      city: 'Vrindavan',
+      state: 'Uttar Pradesh',
+      image: '/images/temples/prem-mandir.jpg',
+      isActive: true,
+    },
+  })
+
+  const tajMahal = await prisma.temple.create({
+    data: {
+      name: 'Taj Mahal',
+      description: 'One of the Seven Wonders of the World, a symbol of eternal love and Mughal architecture',
+      city: 'Agra',
+      state: 'Uttar Pradesh',
+      image: '/images/temples/taj-mahal.jpg',
+      isActive: true,
+    },
+  })
+
+  const agraFort = await prisma.temple.create({
+    data: {
+      name: 'Agra Fort',
+      description: 'UNESCO World Heritage Site, a historic fort showcasing Mughal architecture and Indian history',
+      city: 'Agra',
+      state: 'Uttar Pradesh',
+      image: '/images/temples/agra-fort.jpg',
+      isActive: true,
+    },
+  })
+
+  // Create temples for the Ganga Yatra tour (Haridwar + Rishikesh + Neelkanth)
+  const harKiPauri = await prisma.temple.create({
+    data: {
+      name: 'Har Ki Pauri',
+      description: 'Sacred ghat on the banks of Ganga River, famous for evening Ganga Aarti in Haridwar',
+      city: 'Haridwar',
+      state: 'Uttarakhand',
+      image: '/images/temples/har-ki-pauri.jpg',
+      isActive: true,
+    },
+  })
+
+  const laxmanJhula = await prisma.temple.create({
+    data: {
+      name: 'Laxman Jhula',
+      description: 'Iconic suspension bridge over Ganga River, connecting important ashrams in Rishikesh',
+      city: 'Rishikesh',
+      state: 'Uttarakhand',
+      image: '/images/temples/laxman-jhula.jpg',
+      isActive: true,
+    },
+  })
+
+  const ramJhula = await prisma.temple.create({
+    data: {
+      name: 'Ram Jhula',
+      description: 'Famous suspension bridge over Ganga River, connecting Swarg Ashram with Geeta Bhawan',
+      city: 'Rishikesh',
+      state: 'Uttarakhand',
+      image: '/images/temples/ram-jhula.jpg',
+      isActive: true,
+    },
+  })
+
+  const parmarthNiketan = await prisma.temple.create({
+    data: {
+      name: 'Parmarth Niketan Ashram',
+      description: 'Largest ashram in Rishikesh, known for its spiritual teachings and Ganga Aarti',
+      city: 'Rishikesh',
+      state: 'Uttarakhand',
+      image: '/images/temples/parmarth-niketan.jpg',
+      isActive: true,
+    },
+  })
+
+  const neelkanthMahadev = await prisma.temple.create({
+    data: {
+      name: 'Neelkanth Mahadev Temple',
+      description: 'Ancient Shiva temple nestled in mountains, believed to be where Shiva drank the poison',
+      city: 'Near Rishikesh',
+      state: 'Uttarakhand',
+      image: '/images/temples/neelkanth-mahadev.jpg',
+      isActive: true,
+    },
+  })
+
+  // Create temples for the Vaishno Devi tour
+  const vaishnoDevi = await prisma.temple.create({
+    data: {
+      name: 'Vaishno Devi Temple',
+      description: 'Sacred cave temple dedicated to Mata Vaishno Devi, one of the most revered Shakti Peeths',
+      city: 'Katra',
+      state: 'Jammu & Kashmir',
+      image: '/images/temples/vaishno-devi.jpg',
+      isActive: true,
+    },
+  })
+
+  const banganga = await prisma.temple.create({
+    data: {
+      name: 'Banganga',
+      description: 'Sacred water body at the starting point of Vaishno Devi Yatra, believed to have holy water',
+      city: 'Katra',
+      state: 'Jammu & Kashmir',
+      image: '/images/temples/banganga.jpg',
+      isActive: true,
+    },
+  })
+
+  // Create routes for all four tours
   const premiumRoute = await prisma.route.create({
     data: {
       origin: 'Delhi',
@@ -64,7 +210,37 @@ async function main() {
     },
   })
 
-  // Create the premium combo tour
+  const brajYatraRoute = await prisma.route.create({
+    data: {
+      origin: 'Delhi',
+      destination: 'Delhi (Round Trip)',
+      distance: 450,
+      duration: 31,
+      isActive: true,
+    },
+  })
+
+  const gangaYatraRoute = await prisma.route.create({
+    data: {
+      origin: 'Delhi',
+      destination: 'Delhi (Round Trip)',
+      distance: 550,
+      duration: 34,
+      isActive: true,
+    },
+  })
+
+  const vaishnoDeviRoute = await prisma.route.create({
+    data: {
+      origin: 'Delhi',
+      destination: 'Delhi (Round Trip)',
+      distance: 650,
+      duration: 38,
+      isActive: true,
+    },
+  })
+
+  // Create the premium combo tour (Rajasthan)
   const premiumTrip = await prisma.trip.create({
     data: {
       routeId: premiumRoute.id,
@@ -124,7 +300,191 @@ async function main() {
     },
   })
 
-  // Create additional dates for the premium tour
+  // Create the Braj Yatra tour (Agra + Mathura + Vrindavan)
+  const brajYatraTrip = await prisma.trip.create({
+    data: {
+      routeId: brajYatraRoute.id,
+      templeId: krishnaJanmabhoomi.id, // Primary temple
+      title: '🕉️ Braj Yatra: Mathura + Vrindavan + Agra – Complete Weekend Experience',
+      description: 'Embark on a divine journey through the sacred land of Lord Krishna. Visit Krishna\'s birthplace, experience the spiritual atmosphere of Vrindavan, and witness the magnificent Taj Mahal in one perfect weekend.',
+      departureDate: new Date('2026-02-07T22:00:00Z'), // This Saturday 10:00 PM
+      returnDate: new Date('2026-02-09T05:30:00Z'), // Monday 5:30 AM
+      departureTime: '22:00',
+      returnTime: '05:30',
+      totalSeats: 50,
+      availableSeats: 32,
+      pricePerSeat: 1800,
+      advancePrice: 400,
+      busType: 'Luxury AC Semi-Sleeper',
+      boardingPoints: JSON.stringify([
+        {
+          name: 'Kashmiri Gate',
+          address: 'Near ISBT, Delhi',
+          time: '10:00 PM'
+        },
+        {
+          name: 'Noida',
+          address: 'Sector 18, Noida',
+          time: '10:45 PM'
+        },
+        {
+          name: 'Faridabad',
+          address: 'Sector 37, Faridabad',
+          time: '11:15 PM'
+        }
+      ]),
+      inclusions: JSON.stringify([
+        'Luxury AC Bus Travel',
+        'Complimentary Dinner & Tea',
+        'Professional Tour Guide',
+        'All Temple Darshan Assistance',
+        'Lunch at Premium Restaurant',
+        'Monument Entry Fees (Taj Mahal)',
+        'Travel Insurance',
+        '24/7 Emergency Support'
+      ]),
+      exclusions: JSON.stringify([
+        'Personal Shopping',
+        'Camera Fees at Monuments',
+        'Temple Donations',
+        'Any other personal expenses'
+      ]),
+      cancellationPolicy: JSON.stringify({
+        'before_48_hours': 'Full refund except ₹100 processing fee',
+        'before_24_hours': '50% refund',
+        'less_than_24_hours': 'No refund',
+        'no_show': 'No refund'
+      }),
+      emergencyContact: '+91-9876543210',
+      isActive: true,
+      status: 'UPCOMING',
+    },
+  })
+
+  // Create the Ganga Yatra tour (Haridwar + Rishikesh + Neelkanth)
+  const gangaYatraTrip = await prisma.trip.create({
+    data: {
+      routeId: gangaYatraRoute.id,
+      templeId: harKiPauri.id, // Primary temple
+      title: '🌊 Ganga Yatra: Haridwar + Rishikesh + Neelkanth – Complete Spiritual Experience',
+      description: 'Experience the divine Ganga darshan and spiritual calm in one perfect weekend. Visit sacred ghats, ancient ashrams, and the mighty Neelkanth Mahadev temple in the Himalayan foothills.',
+      departureDate: new Date('2026-02-07T22:00:00Z'), // This Saturday 10:00 PM
+      returnDate: new Date('2026-02-09T06:00:00Z'), // Monday 6:00 AM
+      departureTime: '22:00',
+      returnTime: '06:00',
+      totalSeats: 45,
+      availableSeats: 28,
+      pricePerSeat: 2100,
+      advancePrice: 500,
+      busType: 'Deluxe AC Push-Back',
+      boardingPoints: JSON.stringify([
+        {
+          name: 'Kashmiri Gate',
+          address: 'Near ISBT, Delhi',
+          time: '10:00 PM'
+        },
+        {
+          name: 'Noida',
+          address: 'Sector 18, Noida',
+          time: '10:45 PM'
+        },
+        {
+          name: 'Ghaziabad',
+          address: 'Near Collectorate, Ghaziabad',
+          time: '11:15 PM'
+        }
+      ]),
+      inclusions: JSON.stringify([
+        'Deluxe AC Bus Travel',
+        'Complimentary Tea & Breakfast',
+        'Expert Tour Coordinator',
+        'All Temple & Ashram Visits',
+        'Lunch at Rishikesh Restaurant',
+        'Evening Aarti at Har Ki Pauri',
+        'Travel Insurance',
+        '24/7 Emergency Support'
+      ]),
+      exclusions: JSON.stringify([
+        'Personal Expenses',
+        'Ropeway Charges (if applicable)',
+        'Special Puja Fees',
+        'Dinner (return journey)'
+      ]),
+      cancellationPolicy: JSON.stringify({
+        'before_48_hours': 'Full refund except ₹150 processing fee',
+        'before_24_hours': '50% refund',
+        'less_than_24_hours': 'No refund',
+        'no_show': 'No refund'
+      }),
+      emergencyContact: '+91-9876543210',
+      isActive: true,
+      status: 'UPCOMING',
+    },
+  })
+
+  // Create the Vaishno Devi Mini Experience tour
+  const vaishnoDeviTrip = await prisma.trip.create({
+    data: {
+      routeId: vaishnoDeviRoute.id,
+      templeId: vaishnoDevi.id, // Primary temple
+      title: '🔯 Vaishno Devi Express: Katra – Weekend Mini Experience',
+      description: 'Mata Ka Bulawa - Experience the divine blessing of Mata Vaishno Devi in one perfect weekend. Premium AC Volvo journey with complete yatra assistance and spiritual fulfillment.',
+      departureDate: new Date('2026-02-07T16:00:00Z'), // This Saturday 4:00 PM
+      returnDate: new Date('2026-02-09T06:00:00Z'), // Monday 6:00 AM
+      departureTime: '16:00',
+      returnTime: '06:00',
+      totalSeats: 40,
+      availableSeats: 22,
+      pricePerSeat: 3500,
+      advancePrice: 1000,
+      busType: 'Premium AC Volvo Sleeper',
+      boardingPoints: JSON.stringify([
+        {
+          name: 'Kashmiri Gate',
+          address: 'Near ISBT, Delhi',
+          time: '4:00 PM'
+        },
+        {
+          name: 'Rohini West',
+          address: 'Sector 10, Rohini, Delhi',
+          time: '4:30 PM'
+        },
+        {
+          name: 'Gurgaon',
+          address: 'Sector 56, Gurgaon',
+          time: '5:00 PM'
+        }
+      ]),
+      inclusions: JSON.stringify([
+        'Premium AC Volvo Sleeper Bus',
+        'Expert Tour Coordinator',
+        'Basic Assistance in Katra',
+        'Yatra Registration Help',
+        'Emergency Support Vehicle',
+        'Travel Insurance',
+        '24/7 Helpline Support'
+      ]),
+      exclusions: JSON.stringify([
+        'Yatra Slip & Battery Car',
+        'Pony / Palki / Helicopter',
+        'Meals (optional add-on)',
+        'Personal Expenses',
+        'Special Puja Charges'
+      ]),
+      cancellationPolicy: JSON.stringify({
+        'before_72_hours': 'Full refund except ₹200 processing fee',
+        'before_48_hours': '75% refund',
+        'before_24_hours': '25% refund',
+        'less_than_24_hours': 'No refund',
+        'no_show': 'No refund'
+      }),
+      emergencyContact: '+91-9876543210',
+      isActive: true,
+      status: 'UPCOMING',
+    },
+  })
+
+  // Create additional dates for all four tours
   const futureDates = [
     '2026-02-07T22:00:00Z', // This Saturday
     '2026-02-14T22:00:00Z', // Next Saturday
@@ -139,6 +499,7 @@ async function main() {
     returnDate.setDate(returnDate.getDate() + 2) // Monday morning
     returnDate.setHours(5, 30, 0, 0)
 
+    // Create Premium Combo dates (Rajasthan)
     await prisma.trip.create({
       data: {
         routeId: premiumRoute.id,
@@ -159,6 +520,90 @@ async function main() {
         exclusions: premiumTrip.exclusions,
         cancellationPolicy: premiumTrip.cancellationPolicy,
         emergencyContact: premiumTrip.emergencyContact,
+        isActive: true,
+        status: 'UPCOMING',
+      },
+    })
+
+    // Create Braj Yatra dates (Agra + Mathura + Vrindavan)
+    await prisma.trip.create({
+      data: {
+        routeId: brajYatraRoute.id,
+        templeId: krishnaJanmabhoomi.id,
+        title: '🕉️ Braj Yatra: Mathura + Vrindavan + Agra – Complete Weekend Experience',
+        description: brajYatraTrip.description,
+        departureDate,
+        returnDate,
+        departureTime: '22:00',
+        returnTime: '05:30',
+        totalSeats: 50,
+        availableSeats: Math.floor(Math.random() * 25) + 20,
+        pricePerSeat: 1800,
+        advancePrice: 400,
+        busType: 'Luxury AC Semi-Sleeper',
+        boardingPoints: brajYatraTrip.boardingPoints,
+        inclusions: brajYatraTrip.inclusions,
+        exclusions: brajYatraTrip.exclusions,
+        cancellationPolicy: brajYatraTrip.cancellationPolicy,
+        emergencyContact: brajYatraTrip.emergencyContact,
+        isActive: true,
+        status: 'UPCOMING',
+      },
+    })
+
+    // Create Ganga Yatra dates (Haridwar + Rishikesh + Neelkanth)
+    await prisma.trip.create({
+      data: {
+        routeId: gangaYatraRoute.id,
+        templeId: harKiPauri.id,
+        title: '🌊 Ganga Yatra: Haridwar + Rishikesh + Neelkanth – Complete Spiritual Experience',
+        description: gangaYatraTrip.description,
+        departureDate,
+        returnDate: new Date(returnDate.getTime() + 30 * 60 * 1000), // 6:00 AM
+        departureTime: '22:00',
+        returnTime: '06:00',
+        totalSeats: 45,
+        availableSeats: Math.floor(Math.random() * 20) + 18,
+        pricePerSeat: 2100,
+        advancePrice: 500,
+        busType: 'Deluxe AC Push-Back',
+        boardingPoints: gangaYatraTrip.boardingPoints,
+        inclusions: gangaYatraTrip.inclusions,
+        exclusions: gangaYatraTrip.exclusions,
+        cancellationPolicy: gangaYatraTrip.cancellationPolicy,
+        emergencyContact: gangaYatraTrip.emergencyContact,
+        isActive: true,
+        status: 'UPCOMING',
+      },
+    })
+
+    // Create Vaishno Devi dates (special timing - 4 PM departure)
+    const vaishnoDepartureDate = new Date(date)
+    vaishnoDepartureDate.setHours(16, 0, 0, 0) // 4:00 PM
+    const vaishnoReturnDate = new Date(vaishnoDepartureDate)
+    vaishnoReturnDate.setDate(vaishnoReturnDate.getDate() + 2) // Monday morning
+    vaishnoReturnDate.setHours(6, 0, 0, 0) // 6:00 AM
+
+    await prisma.trip.create({
+      data: {
+        routeId: vaishnoDeviRoute.id,
+        templeId: vaishnoDevi.id,
+        title: '🔯 Vaishno Devi Express: Katra – Weekend Mini Experience',
+        description: vaishnoDeviTrip.description,
+        departureDate: vaishnoDepartureDate,
+        returnDate: vaishnoReturnDate,
+        departureTime: '16:00',
+        returnTime: '06:00',
+        totalSeats: 40,
+        availableSeats: Math.floor(Math.random() * 15) + 20,
+        pricePerSeat: 3500,
+        advancePrice: 1000,
+        busType: 'Premium AC Volvo Sleeper',
+        boardingPoints: vaishnoDeviTrip.boardingPoints,
+        inclusions: vaishnoDeviTrip.inclusions,
+        exclusions: vaishnoDeviTrip.exclusions,
+        cancellationPolicy: vaishnoDeviTrip.cancellationPolicy,
+        emergencyContact: vaishnoDeviTrip.emergencyContact,
         isActive: true,
         status: 'UPCOMING',
       },
@@ -315,8 +760,8 @@ async function main() {
     ],
   })
 
-  console.log('✅ Premium Combo Tour seed completed successfully!')
-  console.log(`📊 Created: ${1} premium tour, ${2} temples, ${1} route, ${5} users, ${8} bookings`)
+  console.log('✅ All Four Tours seed completed successfully!')
+  console.log(`📊 Created: ${20} tours (5 each), ${14} temples, ${4} routes, ${5} users, ${8} bookings`)
 }
 
 main()

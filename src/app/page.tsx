@@ -95,7 +95,10 @@ export default function Home() {
           
           <nav className="hidden md:flex items-center gap-6">
             <a href="#" className="text-sm font-medium hover:text-orange-600 transition-colors">Home</a>
-            <a href="/premium-combo" className="text-sm font-medium hover:text-orange-600 transition-colors">Premium Combo</a>
+            <a href="/premium-combo" className="text-sm font-medium hover:text-orange-600 transition-colors">Rajasthan</a>
+            <a href="/braj-yatra" className="text-sm font-medium hover:text-orange-600 transition-colors">Braj Yatra</a>
+            <a href="/ganga-yatra" className="text-sm font-medium hover:text-orange-600 transition-colors">Ganga Yatra</a>
+            <a href="/vaishno-devi" className="text-sm font-medium hover:text-orange-600 transition-colors">Vaishno Devi</a>
             <a href="/my-bookings" className="text-sm font-medium hover:text-orange-600 transition-colors">My Bookings</a>
             <a href="#" className="text-sm font-medium hover:text-orange-600 transition-colors">Contact</a>
           </nav>
@@ -125,52 +128,187 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Hero Section */}
+      {/* Hero Section - Dual Tours */}
       <section className="bg-gradient-to-br from-orange-600 via-orange-500 to-yellow-500 py-12 md:py-20 text-white">
         <div className="container mx-auto px-4 text-center">
-          <div className="mb-6">
-            <Badge className="mb-4 bg-white/20 text-white border-white/30">
-              🔱 EXCLUSIVE PREMIUM COMBO
+          <div className="mb-8">
+            <Badge className="mb-6 bg-white/20 text-white border-white/30 text-sm px-4 py-2">
+              🚌 WEEKEND SPIRITUAL TOURS
             </Badge>
-            <h1 className="text-3xl md:text-5xl font-bold mb-4">
-              Khatu Shyam ji + Salasar Balaji + Mandawa
-              <span className="block text-yellow-200">Complete Weekend Experience</span>
+            <h1 className="text-3xl md:text-5xl font-bold mb-6">
+              WeekendDarshan
+              <span className="block text-yellow-200">Your Spiritual Journey, Simplified</span>
             </h1>
-            <p className="text-lg text-white/90 max-w-2xl mx-auto mb-8">
-              Experience the perfect blend of spirituality and culture. 
-              Premium AC buses, early morning darshan, heritage exploration, and back by Monday morning!
+            <p className="text-lg text-white/90 max-w-3xl mx-auto mb-10">
+              Choose from our exclusive weekend tours - experience divine blessings and cultural heritage 
+              with comfortable travel, expert guidance, and perfect timing for working professionals.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-              <a href="/premium-combo">
-                <Button size="lg" className="bg-white text-orange-600 hover:bg-orange-50 text-lg px-8">
-                  Explore Premium Combo
-                </Button>
-              </a>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-orange-600 text-lg px-8">
-                <Phone className="mr-2 h-5 w-5" />
-                Call: +91-9876543210
+          </div>
+
+          {/* Tour Cards */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto mb-12">
+            {/* Rajasthan Tour */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+              <div className="mb-4">
+                <Badge className="bg-orange-500 text-white mb-3">🔱 RAJASTHAN SPECIAL</Badge>
+                <h2 className="text-2xl font-bold mb-2">Khatu Shyam + Salasar Balaji + Mandawa</h2>
+                <p className="text-white/80 text-sm">Powerful temples + heritage town experience</p>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="text-center">
+                  <div className="text-2xl font-bold">31-32</div>
+                  <div className="text-sm text-white/80">Hours Total</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold">₹2,000</div>
+                  <div className="text-sm text-white/80">Per Person</div>
+                </div>
+              </div>
+              
+              <div className="space-y-2 mb-6 text-left">
+                <div className="flex items-center gap-2 text-sm">
+                  <Calendar className="h-4 w-4" />
+                  <span>Sat 10:00 PM - Mon 5:30 AM</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Bus className="h-4 w-4" />
+                  <span>Premium AC Push-Back</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <MapPin className="h-4 w-4" />
+                  <span>3 Sacred Destinations</span>
+                </div>
+              </div>
+              
+              <Button className="w-full bg-white text-orange-600 hover:bg-orange-50 font-semibold">
+                Explore Rajasthan Tour
+              </Button>
+            </div>
+
+            {/* Braj Yatra Tour */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+              <div className="mb-4">
+                <Badge className="bg-purple-500 text-white mb-3">🕉️ BRAJ YATRA</Badge>
+                <h2 className="text-2xl font-bold mb-2">Mathura + Vrindavan + Agra</h2>
+                <p className="text-white/80 text-sm">Krishna's land + Taj Mahal experience</p>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="text-center">
+                  <div className="text-2xl font-bold">31-32</div>
+                  <div className="text-sm text-white/80">Hours Total</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold">₹1,800</div>
+                  <div className="text-sm text-white/80">Per Person</div>
+                </div>
+              </div>
+              
+              <div className="space-y-2 mb-6 text-left">
+                <div className="flex items-center gap-2 text-sm">
+                  <Calendar className="h-4 w-4" />
+                  <span>Sat 10:00 PM - Mon 5:30 AM</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Bus className="h-4 w-4" />
+                  <span>Luxury AC Semi-Sleeper</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <MapPin className="h-4 w-4" />
+                  <span>6 Divine & Heritage Sites</span>
+                </div>
+              </div>
+              
+              <Button className="w-full bg-white text-purple-600 hover:bg-purple-50 font-semibold">
+                Explore Braj Yatra
+              </Button>
+            </div>
+
+            {/* Ganga Yatra Tour */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+              <div className="mb-4">
+                <Badge className="bg-blue-500 text-white mb-3">🌊 GANGA YATRA</Badge>
+                <h2 className="text-2xl font-bold mb-2">Haridwar + Rishikesh + Neelkanth</h2>
+                <p className="text-white/80 text-sm">Ganga darshan + spiritual calm experience</p>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="text-center">
+                  <div className="text-2xl font-bold">32-34</div>
+                  <div className="text-sm text-white/80">Hours Total</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold">₹2,100</div>
+                  <div className="text-sm text-white/80">Per Person</div>
+                </div>
+              </div>
+              
+              <div className="space-y-2 mb-6 text-left">
+                <div className="flex items-center gap-2 text-sm">
+                  <Calendar className="h-4 w-4" />
+                  <span>Sat 10:00 PM - Mon 6:00 AM</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Bus className="h-4 w-4" />
+                  <span>Deluxe AC Push-Back</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <MapPin className="h-4 w-4" />
+                  <span>5 Sacred & Spiritual Sites</span>
+                </div>
+              </div>
+              
+              <Button className="w-full bg-white text-blue-600 hover:bg-blue-50 font-semibold">
+                Explore Ganga Yatra
+              </Button>
+            </div>
+
+            {/* Vaishno Devi Tour */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+              <div className="mb-4">
+                <Badge className="bg-pink-500 text-white mb-3">🔯 VAISHNO DEVI EXPRESS</Badge>
+                <h2 className="text-2xl font-bold mb-2">Katra – Weekend Mini Experience</h2>
+                <p className="text-white/80 text-sm">Mata Ka Bulawa - Shakti darshan</p>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="text-center">
+                  <div className="text-2xl font-bold">38-40</div>
+                  <div className="text-sm text-white/80">Hours Total</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold">₹3,500</div>
+                  <div className="text-sm text-white/80">Per Person</div>
+                </div>
+              </div>
+              
+              <div className="space-y-2 mb-6 text-left">
+                <div className="flex items-center gap-2 text-sm">
+                  <Calendar className="h-4 w-4" />
+                  <span>Sat 4:00 PM - Mon 6:00 AM</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Bus className="h-4 w-4" />
+                  <span>Premium AC Volvo Sleeper</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <MapPin className="h-4 w-4" />
+                  <span>2 Divine Destinations</span>
+                </div>
+              </div>
+              
+              <Button className="w-full bg-white text-pink-600 hover:bg-pink-50 font-semibold">
+                Explore Vaishno Devi
               </Button>
             </div>
           </div>
 
-          {/* Quick Highlights */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-              <div className="text-2xl font-bold">31-32</div>
-              <div className="text-sm text-white/80">Hours Total</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-              <div className="text-2xl font-bold">3</div>
-              <div className="text-sm text-white/80">Sacred Destinations</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-              <div className="text-2xl font-bold">₹2,000</div>
-              <div className="text-sm text-white/80">Per Person</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-              <div className="text-2xl font-bold">Sat-Mon</div>
-              <div className="text-sm text-white/80">Perfect Timing</div>
-            </div>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-orange-600 text-lg px-8">
+              <Phone className="mr-2 h-5 w-5" />
+              Call: +91-9876543210
+            </Button>
           </div>
         </div>
       </section>
@@ -178,38 +316,38 @@ export default function Home() {
       {/* Features */}
       <section className="py-12 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-bold text-center mb-8 text-gray-900">Why Choose Our Premium Combo?</h2>
+          <h2 className="text-2xl font-bold text-center mb-8 text-gray-900">Why Choose WeekendDarshan?</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div className="text-center">
               <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
                 <Calendar className="h-6 w-6 text-orange-600" />
               </div>
-              <h3 className="font-semibold mb-1">Early Darshan</h3>
-              <p className="text-sm text-gray-600">Avoid crowds, peaceful experience</p>
+              <h3 className="font-semibold mb-1">Perfect Timing</h3>
+              <p className="text-sm text-gray-600">Weekend trips, back by Monday morning</p>
             </div>
             
             <div className="text-center">
               <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
                 <Bus className="h-6 w-6 text-orange-600" />
               </div>
-              <h3 className="font-semibold mb-1">Premium AC Bus</h3>
-              <p className="text-sm text-gray-600">Comfortable overnight journey</p>
+              <h3 className="font-semibold mb-1">Comfort Travel</h3>
+              <p className="text-sm text-gray-600">AC buses with professional drivers</p>
             </div>
             
             <div className="text-center">
               <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
                 <Users className="h-6 w-6 text-orange-600" />
               </div>
-              <h3 className="font-semibold mb-1">3 Destinations</h3>
-              <p className="text-sm text-gray-600">Temples + Heritage in one trip</p>
+              <h3 className="font-semibold mb-1">Multiple Tours</h3>
+              <p className="text-sm text-gray-600">Rajasthan & Braj Yatra options</p>
             </div>
             
             <div className="text-center">
               <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
                 <MapPin className="h-6 w-6 text-orange-600" />
               </div>
-              <h3 className="font-semibold mb-1">Office-Friendly</h3>
-              <p className="text-sm text-gray-600">Back by Monday morning</p>
+              <h3 className="font-semibold mb-1">Divine Experience</h3>
+              <p className="text-sm text-gray-600">Spiritual destinations with expert guidance</p>
             </div>
           </div>
         </div>
@@ -221,11 +359,11 @@ export default function Home() {
           <div className="container mx-auto px-4">
             <div className="flex items-center justify-between mb-8">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">🔱 Premium Combo - This Weekend</h2>
-                <p className="text-gray-600">Join us for this weekend's exclusive spiritual journey</p>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">🎉 This Weekend's Tours</h2>
+                <p className="text-gray-600">Join us for this weekend's exclusive spiritual journeys</p>
               </div>
               <Badge variant="outline" className="text-green-600 border-green-600">
-                {thisWeekendTrips.length} trips available
+                {thisWeekendTrips.length} tours available
               </Badge>
             </div>
 
@@ -256,7 +394,7 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">🔱 Premium Combo - Upcoming Dates</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">📅 Upcoming Tour Dates</h2>
               <p className="text-gray-600">Plan your spiritual journey in advance</p>
             </div>
             <Button variant="outline">
@@ -283,7 +421,7 @@ export default function Home() {
               ))
             ) : (
               <div className="col-span-full text-center py-12">
-                <p className="text-gray-500">No upcoming premium combo tours found</p>
+                <p className="text-gray-500">No upcoming tours found</p>
               </div>
             )}
           </div>
@@ -305,22 +443,22 @@ export default function Home() {
             </div>
             
             <div>
-              <h4 className="font-semibold mb-4">Premium Combo</h4>
+              <h4 className="font-semibold mb-4">Rajasthan & Braj</h4>
               <ul className="space-y-2 text-sm text-gray-400">
-                <li>Khatu Shyam ji</li>
-                <li>Salasar Balaji</li>
-                <li>Mandawa Heritage</li>
-                <li>Weekend Special</li>
+                <li>🔱 Khatu Shyam ji</li>
+                <li>🔱 Salasar Balaji</li>
+                <li>🕉️ Mathura Temples</li>
+                <li>🕉️ Taj Mahal</li>
               </ul>
             </div>
             
             <div>
-              <h4 className="font-semibold mb-4">Support</h4>
+              <h4 className="font-semibold mb-4">Ganga & Vaishno</h4>
               <ul className="space-y-2 text-sm text-gray-400">
-                <li><a href="#" className="hover:text-white">Contact Us</a></li>
-                <li><a href="#" className="hover:text-white">Booking Policy</a></li>
-                <li><a href="#" className="hover:text-white">Refund Policy</a></li>
-                <li><a href="#" className="hover:text-white">FAQs</a></li>
+                <li>🌊 Har Ki Pauri</li>
+                <li>🌊 Neelkanth Mahadev</li>
+                <li>🔯 Vaishno Devi</li>
+                <li>🔯 Katra Yatra</li>
               </ul>
             </div>
             
