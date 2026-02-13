@@ -7,12 +7,13 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Search, Filter, Calendar, MapPin, Bus, Users, Star, Phone, User, LogOut } from 'lucide-react'
+import { Search, Filter, Calendar, MapPin, Bus, Users, Star, Phone, User, LogOut, Clock, Shield, Check, AlertCircle, MessageCircle, Gift, Zap } from 'lucide-react'
 import { toast } from '@/hooks/use-toast'
 import { useAuth } from '@/contexts/auth-context'
 import { MobileNavigation } from '@/components/mobile-navigation'
 import { PWAInstallBanner } from '@/components/pwa-install-banner'
 import { LoginModal } from '@/components/auth/login-modal'
+import { WhatsAppButton } from '@/components/whatsapp-button'
 
 export default function Home() {
   const [trips, setTrips] = useState<Trip[]>([])
@@ -40,27 +41,18 @@ export default function Home() {
       const data = await response.json()
       
       if (data.success) {
-        // If database needs seeding, do it automatically
         if (data.message === 'Database ready, needs seeding') {
-          console.log('Database needs seeding, calling seed API...')
           const seedResponse = await fetch('/api/seed', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' }
           })
           
           if (seedResponse.ok) {
-            // Fetch trips again after seeding
             const retryResponse = await fetch('/api/trips')
             const retryData = await retryResponse.json()
             if (retryData.success) {
               setTrips(retryData.data)
-              toast({
-                title: 'Database Ready',
-                description: 'Tours loaded successfully!',
-              })
             }
-          } else {
-            throw new Error('Failed to seed database')
           }
         } else {
           setTrips(data.data)
@@ -87,30 +79,15 @@ export default function Home() {
     trip.temple.name.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-  const thisWeekendTrips = filteredTrips.filter(trip => {
-    const tripDate = new Date(trip.departureDate)
-    const today = new Date()
-    const thisSaturday = new Date(today)
-    thisSaturday.setDate(today.getDate() + (6 - today.getDay()) + (today.getDay() > 6 ? 7 : 0))
-    const thisSunday = new Date(thisSaturday)
-    thisSunday.setDate(thisSaturday.getDate() + 1)
-    
-    return tripDate >= thisSaturday && tripDate <= thisSunday
-  })
-
-  const upcomingTrips = filteredTrips.filter(trip => {
-    const tripDate = new Date(trip.departureDate)
-    const today = new Date()
-    const thisSaturday = new Date(today)
-    thisSaturday.setDate(today.getDate() + (6 - today.getDay()) + (today.getDay() > 6 ? 7 : 0))
-    const thisSunday = new Date(thisSaturday)
-    thisSunday.setDate(thisSaturday.getDate() + 1)
-    
-    return !(tripDate >= thisSaturday && tripDate <= thisSunday)
-  })
+  // Get first few trips for display
+  const displayTrips = filteredTrips.slice(0, 8)
+  const availableSeats = displayTrips.reduce((sum, trip) => sum + trip.availableSeats, 0)
 
   return (
     <div className="min-h-screen bg-background">
+      {/* WhatsApp Floating Button */}
+      <WhatsAppButton />
+
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -127,14 +104,12 @@ export default function Home() {
             <a href="/ganga-yatra" className="text-sm font-medium hover:text-orange-600 transition-colors">Ganga Yatra</a>
             <a href="/vaishno-devi" className="text-sm font-medium hover:text-orange-600 transition-colors">Vaishno Devi</a>
             <a href="/my-bookings" className="text-sm font-medium hover:text-orange-600 transition-colors">My Bookings</a>
-            <a href="#" className="text-sm font-medium hover:text-orange-600 transition-colors">Contact</a>
           </nav>
 
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm" className="hidden sm:flex">
               <Phone className="h-4 w-4 mr-2" />
               <span className="hidden lg:inline">+91-9876543210</span>
-              <span className="lg:hidden">Call</span>
             </Button>
             
             {user ? (
@@ -156,311 +131,483 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Hero Section - Dual Tours */}
-      <section className="bg-gradient-to-br from-orange-600 via-orange-500 to-yellow-500 py-8 sm:py-12 md:py-20 text-white">
-        <div className="container mx-auto px-4 text-center">
+      {/* Hero Section */}
+      <section className="bg-gradient-to-br from-orange-600 via-orange-500 to-yellow-500 py-12 sm:py-16 md:py-24 text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-black/10"></div>
+        <div className="container mx-auto px-4 text-center relative z-10">
           <div className="mb-6 sm:mb-8">
             <Badge className="mb-4 sm:mb-6 bg-white/20 text-white border-white/30 text-xs sm:text-sm px-3 sm:px-4 py-2">
-              🚌 WEEKEND SPIRITUAL TOURS
+              🚌 WeekendDarshan – Landing Page (Optimized Copy)
             </Badge>
-            <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-4 sm:mb-6">
+            <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 sm:mb-6">
               WeekendDarshan
-              <span className="block text-yellow-200 text-lg sm:text-xl md:text-2xl">Your Spiritual Journey, Simplified</span>
+              <span className="block text-yellow-200 text-xl sm:text-2xl md:text-3xl mt-2">Your Spiritual Journey, Simplified</span>
             </h1>
-            <p className="text-sm sm:text-base lg:text-lg text-white/90 max-w-3xl mx-auto mb-6 sm:mb-10 px-4">
-              Choose from our exclusive weekend tours - experience divine blessings and cultural heritage 
-              with comfortable travel, expert guidance, and perfect timing for working professionals.
+            <p className="text-lg sm:text-xl md:text-2xl text-white/90 max-w-4xl mx-auto mb-6 sm:mb-8 px-4 leading-relaxed">
+              Weekend Temple Tours from Delhi — Travel Saturday Night, Return Monday Morning<br/>
+              <span className="text-yellow-200 font-semibold">Experience divine darshan without taking leave from work.</span><br/>
+              Comfortable buses, planned itineraries, and smooth darshan flow — all handled for you.
             </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+              <Button size="lg" className="bg-white text-orange-600 hover:bg-orange-50 font-bold text-lg px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-105">
+                <Zap className="h-5 w-5 mr-2" />
+                Book in 2 minutes. Travel this weekend.
+              </Button>
+              <div className="flex items-center gap-2">
+                <Phone className="h-5 w-5" />
+                <span className="text-lg font-semibold">Call / WhatsApp: +91-9876543210</span>
+              </div>
+            </div>
+            <Button variant="outline" className="bg-white/10 hover:bg-white/20 text-white border-white/30 px-6 py-3 rounded-full">
+              View This Weekend Tours
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Urgency Section */}
+      <section className="bg-red-50 border-y border-red-200 py-6">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-center gap-3 text-red-700">
+            <AlertCircle className="h-5 w-5" />
+            <span className="font-bold text-lg">🔥 Limited Seats – Most trips sell out by Friday evening</span>
+            <span className="text-sm text-red-600">({availableSeats} seats left across all tours)</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Tours */}
+      <section className="py-12 sm:py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">🔱 Featured Weekend Tours</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">Perfect weekend getaways for spiritual seekers</p>
           </div>
 
-          {/* Tour Cards */}
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 sm:gap-8 max-w-6xl mx-auto mb-8 sm:mb-12 px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
             {/* Rajasthan Tour */}
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 border border-white/20">
-              <div className="mb-3 sm:mb-4">
-                <Badge className="bg-orange-500 text-white mb-2 sm:mb-3 text-xs sm:text-sm">🔱 RAJASTHAN SPECIAL</Badge>
-                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-1 sm:mb-2">Khatu Shyam + Salasar Balaji + Mandawa</h2>
-                <p className="text-white/80 text-xs sm:text-sm">Powerful temples + heritage town experience</p>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
-                <div className="text-center">
-                  <div className="text-lg sm:text-xl lg:text-2xl font-bold">31-32</div>
-                  <div className="text-xs sm:text-sm text-white/80">Hours Total</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-lg sm:text-xl lg:text-2xl font-bold">₹2,000</div>
-                  <div className="text-xs sm:text-sm text-white/80">Per Person</div>
-                </div>
-              </div>
-              
-              <div className="space-y-1 sm:space-y-2 mb-4 sm:mb-6 text-left">
-                <div className="flex items-center gap-2 text-xs sm:text-sm">
-                  <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
-                  <span>Sat 10:00 PM - Mon 5:30 AM</span>
-                </div>
-                <div className="flex items-center gap-2 text-xs sm:text-sm">
-                  <Bus className="h-3 w-3 sm:h-4 sm:w-4" />
-                  <span>Premium AC Push-Back</span>
-                </div>
-                <div className="flex items-center gap-2 text-xs sm:text-sm">
-                  <MapPin className="h-3 w-3 sm:h-4 sm:w-4" />
-                  <span>3 Sacred Destinations</span>
+            <div className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-shadow">
+              <div className="bg-gradient-to-r from-orange-500 to-orange-600 p-6 text-white">
+                <Badge className="bg-white/20 text-white mb-3 inline-block">🔱 Rajasthan Premium Combo</Badge>
+                <h3 className="text-2xl font-bold mb-2">Khatu Shyam Ji Temple + Salasar Balaji Temple + Mandawa</h3>
+                <p className="text-white/90">Powerful temple blessings + heritage Shekhawati experience</p>
+                
+                <div className="grid grid-cols-3 gap-4 mt-6 text-sm">
+                  <div className="text-center">
+                    <Clock className="h-5 w-5 mx-auto mb-1" />
+                    <div className="font-bold">31–32 Hours</div>
+                    <div className="text-white/80">Total</div>
+                  </div>
+                  <div className="text-center">
+                    <Bus className="h-5 w-5 mx-auto mb-1" />
+                    <div className="font-bold">Premium AC</div>
+                    <div className="text-white/80">Push-Back</div>
+                  </div>
+                  <div className="text-center">
+                    <MapPin className="h-5 w-5 mx-auto mb-1" />
+                    <div className="font-bold">3 Sacred</div>
+                    <div className="text-white/80">Destinations</div>
+                  </div>
                 </div>
               </div>
               
-              <a href="/rajasthan-tour">
-                <Button className="w-full bg-white text-orange-600 hover:bg-orange-50 font-semibold text-sm sm:text-base">
-                  Explore Rajasthan Tour
-                </Button>
-              </a>
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <div className="text-2xl font-bold text-orange-600">₹2,000</div>
+                    <div className="text-sm text-gray-500">per person</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-sm text-gray-600">Sat 10:00 PM</div>
+                    <div className="text-sm text-gray-600">Mon 5:30 AM</div>
+                  </div>
+                </div>
+                
+                <a href="/rajasthan-tour">
+                  <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 rounded-lg transition-colors">
+                    Explore Rajasthan Tour
+                  </Button>
+                </a>
+              </div>
             </div>
 
             {/* Braj Yatra Tour */}
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 border border-white/20">
-              <div className="mb-3 sm:mb-4">
-                <Badge className="bg-purple-500 text-white mb-2 sm:mb-3 text-xs sm:text-sm">🕉️ BRAJ YATRA</Badge>
-                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-1 sm:mb-2">Mathura + Vrindavan + Agra</h2>
-                <p className="text-white/80 text-xs sm:text-sm">Krishna's land + Taj Mahal experience</p>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
-                <div className="text-center">
-                  <div className="text-lg sm:text-xl lg:text-2xl font-bold">31-32</div>
-                  <div className="text-xs sm:text-sm text-white/80">Hours Total</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-lg sm:text-xl lg:text-2xl font-bold">₹1,800</div>
-                  <div className="text-xs sm:text-sm text-white/80">Per Person</div>
-                </div>
-              </div>
-              
-              <div className="space-y-1 sm:space-y-2 mb-4 sm:mb-6 text-left">
-                <div className="flex items-center gap-2 text-xs sm:text-sm">
-                  <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
-                  <span>Sat 10:00 PM - Mon 5:30 AM</span>
-                </div>
-                <div className="flex items-center gap-2 text-xs sm:text-sm">
-                  <Bus className="h-3 w-3 sm:h-4 sm:w-4" />
-                  <span>Luxury AC Semi-Sleeper</span>
-                </div>
-                <div className="flex items-center gap-2 text-xs sm:text-sm">
-                  <MapPin className="h-3 w-3 sm:h-4 sm:w-4" />
-                  <span>6 Divine & Heritage Sites</span>
+            <div className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-shadow">
+              <div className="bg-gradient-to-r from-purple-500 to-purple-600 p-6 text-white">
+                <Badge className="bg-white/20 text-white mb-3 inline-block">🕉️ Braj Yatra Special</Badge>
+                <h3 className="text-2xl font-bold mb-2">Mathura + Vrindavan + Taj Mahal</h3>
+                <p className="text-white/90">Krishna bhakti + world heritage experience</p>
+                
+                <div className="grid grid-cols-3 gap-4 mt-6 text-sm">
+                  <div className="text-center">
+                    <Clock className="h-5 w-5 mx-auto mb-1" />
+                    <div className="font-bold">31–32 Hours</div>
+                    <div className="text-white/80">Total</div>
+                  </div>
+                  <div className="text-center">
+                    <Bus className="h-5 w-5 mx-auto mb-1" />
+                    <div className="font-bold">Luxury AC</div>
+                    <div className="text-white/80">Semi-Sleeper</div>
+                  </div>
+                  <div className="text-center">
+                    <MapPin className="h-5 w-5 mx-auto mb-1" />
+                    <div className="font-bold">6 Divine</div>
+                    <div className="text-white/80">Heritage Sites</div>
+                  </div>
                 </div>
               </div>
               
-              <a href="/braj-yatra">
-                <Button className="w-full bg-white text-purple-600 hover:bg-purple-50 font-semibold text-sm sm:text-base">
-                  Explore Braj Yatra
-                </Button>
-              </a>
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <div className="text-2xl font-bold text-purple-600">₹1,800</div>
+                    <div className="text-sm text-gray-500">per person</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-sm text-gray-600">Sat 10:00 PM</div>
+                    <div className="text-sm text-gray-600">Mon 5:30 AM</div>
+                  </div>
+                </div>
+                
+                <a href="/braj-yatra">
+                  <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-lg transition-colors">
+                    Explore Braj Yatra
+                  </Button>
+                </a>
+              </div>
             </div>
 
             {/* Ganga Yatra Tour */}
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 border border-white/20">
-              <div className="mb-3 sm:mb-4">
-                <Badge className="bg-blue-500 text-white mb-2 sm:mb-3 text-xs sm:text-sm">🌊 GANGA YATRA</Badge>
-                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-1 sm:mb-2">Haridwar + Rishikesh + Neelkanth</h2>
-                <p className="text-white/80 text-xs sm:text-sm">Ganga darshan + spiritual calm experience</p>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
-                <div className="text-center">
-                  <div className="text-lg sm:text-xl lg:text-2xl font-bold">32-34</div>
-                  <div className="text-xs sm:text-sm text-white/80">Hours Total</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-lg sm:text-xl lg:text-2xl font-bold">₹2,100</div>
-                  <div className="text-xs sm:text-sm text-white/80">Per Person</div>
-                </div>
-              </div>
-              
-              <div className="space-y-1 sm:space-y-2 mb-4 sm:mb-6 text-left">
-                <div className="flex items-center gap-2 text-xs sm:text-sm">
-                  <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
-                  <span>Sat 10:00 PM - Mon 6:00 AM</span>
-                </div>
-                <div className="flex items-center gap-2 text-xs sm:text-sm">
-                  <Bus className="h-3 w-3 sm:h-4 sm:w-4" />
-                  <span>Deluxe AC Push-Back</span>
-                </div>
-                <div className="flex items-center gap-2 text-xs sm:text-sm">
-                  <MapPin className="h-3 w-3 sm:h-4 sm:w-4" />
-                  <span>5 Sacred & Spiritual Sites</span>
+            <div className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-shadow">
+              <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-6 text-white">
+                <Badge className="bg-white/20 text-white mb-3 inline-block">🌊 Ganga Yatra</Badge>
+                <h3 className="text-2xl font-bold mb-2">Har Ki Pauri + Rishikesh + Neelkanth Mahadev Temple</h3>
+                <p className="text-white/90">Ganga darshan + peaceful Himalayan spiritual energy</p>
+                
+                <div className="grid grid-cols-3 gap-4 mt-6 text-sm">
+                  <div className="text-center">
+                    <Clock className="h-5 w-5 mx-auto mb-1" />
+                    <div className="font-bold">32–34 Hours</div>
+                    <div className="text-white/80">Total</div>
+                  </div>
+                  <div className="text-center">
+                    <Bus className="h-5 w-5 mx-auto mb-1" />
+                    <div className="font-bold">Deluxe AC</div>
+                    <div className="text-white/80">Push-Back</div>
+                  </div>
+                  <div className="text-center">
+                    <MapPin className="h-5 w-5 mx-auto mb-1" />
+                    <div className="font-bold">5 Spiritual</div>
+                    <div className="text-white/80">Locations</div>
+                  </div>
                 </div>
               </div>
               
-              <a href="/ganga-yatra">
-                <Button className="w-full bg-white text-blue-600 hover:bg-blue-50 font-semibold text-sm sm:text-base">
-                  Explore Ganga Yatra
-                </Button>
-              </a>
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <div className="text-2xl font-bold text-blue-600">₹2,100</div>
+                    <div className="text-sm text-gray-500">per person</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-sm text-gray-600">Sat 10:00 PM</div>
+                    <div className="text-sm text-gray-600">Mon 6:00 AM</div>
+                  </div>
+                </div>
+                
+                <a href="/ganga-yatra">
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors">
+                    Explore Ganga Yatra
+                  </Button>
+                </a>
+              </div>
             </div>
 
             {/* Vaishno Devi Tour */}
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 border border-white/20">
-              <div className="mb-3 sm:mb-4">
-                <Badge className="bg-pink-500 text-white mb-2 sm:mb-3 text-xs sm:text-sm">🔯 VAISHNO DEVI EXPRESS</Badge>
-                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-1 sm:mb-2">Katra – Weekend Mini Experience</h2>
-                <p className="text-white/80 text-xs sm:text-sm">Mata Ka Bulawa - Shakti darshan</p>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
-                <div className="text-center">
-                  <div className="text-lg sm:text-xl lg:text-2xl font-bold">38-40</div>
-                  <div className="text-xs sm:text-sm text-white/80">Hours Total</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-lg sm:text-xl lg:text-2xl font-bold">₹3,500</div>
-                  <div className="text-xs sm:text-sm text-white/80">Per Person</div>
-                </div>
-              </div>
-              
-              <div className="space-y-1 sm:space-y-2 mb-4 sm:mb-6 text-left">
-                <div className="flex items-center gap-2 text-xs sm:text-sm">
-                  <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
-                  <span>Sat 4:00 PM - Mon 6:00 AM</span>
-                </div>
-                <div className="flex items-center gap-2 text-xs sm:text-sm">
-                  <Bus className="h-3 w-3 sm:h-4 sm:w-4" />
-                  <span>Premium AC Volvo Sleeper</span>
-                </div>
-                <div className="flex items-center gap-2 text-xs sm:text-sm">
-                  <MapPin className="h-3 w-3 sm:h-4 sm:w-4" />
-                  <span>2 Divine Destinations</span>
-                </div>
-              </div>
-              
-              <a href="/vaishno-devi">
-                <Button className="w-full bg-white text-pink-600 hover:bg-pink-50 font-semibold text-sm sm:text-base">
-                  Explore Vaishno Devi
-                </Button>
-              </a>
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-orange-600 text-base sm:text-lg px-6 sm:px-8 py-2 sm:py-3">
-              <Phone className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-              <span className="hidden sm:inline">Call: +91-9876543210</span>
-              <span className="sm:hidden">Call Now</span>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Features */}
-      <section className="py-8 sm:py-12 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-xl sm:text-2xl font-bold text-center mb-6 sm:mb-8 text-gray-900">Why Choose WeekendDarshan?</h2>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            <div className="text-center">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
-                <Calendar className="h-5 w-5 sm:h-6 sm:w-6 text-orange-600" />
-              </div>
-              <h3 className="font-semibold mb-1 text-sm sm:text-base">Perfect Timing</h3>
-              <p className="text-xs sm:text-sm text-gray-600">Weekend trips, back by Monday morning</p>
-            </div>
-            
-            <div className="text-center">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
-                <Bus className="h-5 w-5 sm:h-6 sm:w-6 text-orange-600" />
-              </div>
-              <h3 className="font-semibold mb-1 text-sm sm:text-base">Comfortable Travel</h3>
-              <p className="text-xs sm:text-sm text-gray-600">AC buses with push-back seats</p>
-            </div>
-            
-            <div className="text-center">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
-                <Users className="h-5 w-5 sm:h-6 sm:w-6 text-orange-600" />
-              </div>
-              <h3 className="font-semibold mb-1 text-sm sm:text-base">Group Discounts</h3>
-              <p className="text-xs sm:text-sm text-gray-600">Special prices for groups</p>
-            </div>
-            
-            <div className="text-center">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
-                <Star className="h-5 w-5 sm:h-6 sm:w-6 text-orange-600" />
-              </div>
-              <h3 className="font-semibold mb-1 text-sm sm:text-base">Expert Guidance</h3>
-              <p className="text-xs sm:text-sm text-gray-600">Experienced tour guides</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* This Weekend Trips */}
-      {thisWeekendTrips.length > 0 && (
-        <section className="py-8 sm:py-12 bg-gray-50">
-          <div className="container mx-auto px-4">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8 gap-4">
-              <div>
-                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">🎉 This Weekend's Tours</h2>
-                <p className="text-sm sm:text-base text-gray-600">Join us for this weekend's exclusive spiritual journeys</p>
-              </div>
-              <Badge variant="outline" className="text-green-600 border-green-600 text-sm sm:text-base">
-                {thisWeekendTrips.length} tours available
-              </Badge>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
-              {loading ? (
-                Array.from({ length: 3 }).map((_, i) => (
-                  <div key={i} className="space-y-4">
-                    <Skeleton className="h-48 w-full rounded-lg" />
-                    <Skeleton className="h-4 w-3/4" />
-                    <Skeleton className="h-4 w-1/2" />
+            <div className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-shadow">
+              <div className="bg-gradient-to-r from-pink-500 to-pink-600 p-6 text-white">
+                <Badge className="bg-white/20 text-white mb-3 inline-block">🔯 Vaishno Devi Express (Premium)</Badge>
+                <h3 className="text-2xl font-bold mb-2">Vaishno Devi Temple – Katra Weekend Experience</h3>
+                <p className="text-white/90">Mata ka bulawa — express darshan with comfort</p>
+                
+                <div className="grid grid-cols-3 gap-4 mt-6 text-sm">
+                  <div className="text-center">
+                    <Clock className="h-5 w-5 mx-auto mb-1" />
+                    <div className="font-bold">38–40 Hours</div>
+                    <div className="text-white/80">Total</div>
                   </div>
-                ))
-              ) : (
-                thisWeekendTrips.map((trip) => (
-                  <TripCard
-                    key={trip.id}
-                    trip={trip}
-                  />
-                ))
-              )}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Upcoming Trips */}
-      <section className="py-12 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">📅 Upcoming Tour Dates</h2>
-              <p className="text-gray-600">Plan your spiritual journey in advance</p>
-            </div>
-            <Button variant="outline">
-              <Filter className="h-4 w-4 mr-2" />
-              Filter
-            </Button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {loading ? (
-              Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="space-y-4">
-                  <Skeleton className="h-48 w-full rounded-lg" />
-                  <Skeleton className="h-4 w-3/4" />
-                  <Skeleton className="h-4 w-1/2" />
+                  <div className="text-center">
+                    <Bus className="h-5 w-5 mx-auto mb-1" />
+                    <div className="font-bold">Premium Volvo</div>
+                    <div className="text-white/80">Sleeper</div>
+                  </div>
+                  <div className="text-center">
+                    <MapPin className="h-5 w-5 mx-auto mb-1" />
+                    <div className="font-bold">2 Divine</div>
+                    <div className="text-white/80">Destinations</div>
+                  </div>
                 </div>
-              ))
-            ) : upcomingTrips.length > 0 ? (
-              upcomingTrips.map((trip) => (
-                <TripCard
-                  key={trip.id}
-                  trip={trip}
-                />
-              ))
-            ) : (
-              <div className="col-span-full text-center py-12">
-                <p className="text-gray-500">No upcoming tours found</p>
               </div>
-            )}
+              
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <div className="text-2xl font-bold text-pink-600">₹3,500</div>
+                    <div className="text-sm text-gray-500">per person</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-sm text-gray-600">Sat 4:00 PM</div>
+                    <div className="text-sm text-gray-600">Mon 6:00 AM</div>
+                  </div>
+                </div>
+                
+                <a href="/vaishno-devi">
+                  <Button className="w-full bg-pink-600 hover:bg-pink-700 text-white font-semibold py-3 rounded-lg transition-colors">
+                    Explore Vaishno Devi Tour
+                  </Button>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Why Choose Us */}
+      <section className="py-12 sm:py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">⭐ Why People Choose WeekendDarshan</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">Built by devotees, for devotees</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+            <div className="text-center">
+              <div className="bg-orange-100 rounded-full p-4 w-16 h-16 mx-auto mb-4">
+                <Clock className="h-8 w-8 text-orange-600" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">Perfect Timing</h3>
+              <p className="text-gray-600">Travel weekend only — reach office Monday morning</p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-blue-100 rounded-full p-4 w-16 h-16 mx-auto mb-4">
+                <Bus className="h-8 w-8 text-blue-600" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">Comfortable & Safe</h3>
+              <p className="text-gray-600">Verified buses + trained drivers + clean seating</p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-purple-100 rounded-full p-4 w-16 h-16 mx-auto mb-4">
+                <Shield className="h-8 w-8 text-purple-600" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">Darshan-Focused</h3>
+              <p className="text-gray-600">Timings designed for maximum darshan success</p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-green-100 rounded-full p-4 w-16 h-16 mx-auto mb-4">
+                <Users className="h-8 w-8 text-green-600" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">Group Friendly</h3>
+              <p className="text-gray-600">Special pricing for families & groups</p>
+            </div>
+          </div>
+
+          <div className="mt-12 text-center">
+            <p className="text-lg text-gray-700 italic">
+              👨‍💼 "Built by a devotee who travelled these routes himself and solved every problem."
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Live Availability */}
+      <section className="py-12 sm:py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">🎉 This Weekend's Tours (Live Availability)</h2>
+            <div className="flex items-center justify-center gap-2 text-red-600 mb-6">
+              <AlertCircle className="h-5 w-5" />
+              <span className="font-semibold">🔥 Almost Full - Limited seats remaining!</span>
+            </div>
+          </div>
+
+          {loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="bg-white rounded-lg shadow-md p-6">
+                  <Skeleton className="h-4 w-3/4 mb-2" />
+                  <Skeleton className="h-4 w-1/2 mb-4" />
+                  <Skeleton className="h-8 w-full" />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {displayTrips.map((trip) => (
+                <div key={trip.id} className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                  <div className="p-6">
+                    <div className="flex items-center justify-between mb-3">
+                      <Badge variant={trip.availableSeats < 10 ? "destructive" : "secondary"}>
+                        {trip.availableSeats < 10 ? "Almost Full" : "Available"}
+                      </Badge>
+                      <span className="text-sm text-gray-500">{trip.availableSeats} seats left</span>
+                    </div>
+                    <h3 className="font-semibold text-lg mb-2 line-clamp-2">{trip.title}</h3>
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-lg font-bold text-orange-600">₹{trip.pricePerSeat}</span>
+                      <span className="text-sm text-gray-500">
+                        {new Date(trip.departureDate).toLocaleDateString('en-IN', {
+                          month: 'short',
+                          day: 'numeric'
+                        })}
+                      </span>
+                    </div>
+                    <Button 
+                      className="w-full bg-orange-600 hover:bg-orange-700 text-white"
+                      onClick={() => window.location.href = `/book/${trip.id}`}
+                    >
+                      Book Now
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Simple Booking Process */}
+      <section className="py-12 sm:py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">💳 Simple Booking Process</h2>
+            <p className="text-lg text-gray-600">Book your spiritual journey in 4 simple steps</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+            <div className="text-center">
+              <div className="bg-orange-100 rounded-full p-4 w-16 h-16 mx-auto mb-4">
+                <span className="text-2xl font-bold text-orange-600">1</span>
+              </div>
+              <h3 className="font-bold text-lg mb-2">Select Your Tour</h3>
+              <p className="text-gray-600">Choose from multiple weekend options</p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-blue-100 rounded-full p-4 w-16 h-16 mx-auto mb-4">
+                <span className="text-2xl font-bold text-blue-600">2</span>
+              </div>
+              <h3 className="font-bold text-lg mb-2">Choose Seats</h3>
+              <p className="text-gray-600">Select number of passengers</p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-purple-100 rounded-full p-4 w-16 h-16 mx-auto mb-4">
+                <span className="text-2xl font-bold text-purple-600">3</span>
+              </div>
+              <h3 className="font-bold text-lg mb-2">Pay Small Advance</h3>
+              <p className="text-gray-600">Secure payment with multiple options</p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-green-100 rounded-full p-4 w-16 h-16 mx-auto mb-4">
+                <span className="text-2xl font-bold text-green-600">4</span>
+              </div>
+              <h3 className="font-bold text-lg mb-2">Get Ticket</h3>
+              <p className="text-gray-600">WhatsApp ticket + boarding details</p>
+            </div>
+          </div>
+
+          <div className="mt-12 text-center">
+            <div className="inline-flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-full">
+              <Check className="h-5 w-5" />
+              <span className="font-semibold">Digital ticket + QR code provided</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Trust & Safety */}
+      <section className="py-12 sm:py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">🔐 Trust & Safety Section</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            <div className="flex items-start gap-3">
+              <Check className="h-6 w-6 text-green-600 mt-1 flex-shrink-0" />
+              <div>
+                <h3 className="font-semibold">100% Verified Buses</h3>
+                <p className="text-gray-600">All buses are verified and regularly inspected</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <Check className="h-6 w-6 text-green-600 mt-1 flex-shrink-0" />
+              <div>
+                <h3 className="font-semibold">Experienced Drivers</h3>
+                <p className="text-gray-600">Professional drivers with route experience</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <Check className="h-6 w-6 text-green-600 mt-1 flex-shrink-0" />
+              <div>
+                <h3 className="font-semibold">Emergency Support</h3>
+                <p className="text-gray-600">24/7 support during your journey</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <Check className="h-6 w-6 text-green-600 mt-1 flex-shrink-0" />
+              <div>
+                <h3 className="font-semibold">Transparent Pricing</h3>
+                <p className="text-gray-600">No hidden costs - what you see is what you pay</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <Check className="h-6 w-6 text-green-600 mt-1 flex-shrink-0" />
+              <div>
+                <h3 className="font-semibold">Female Traveler Safety</h3>
+                <p className="text-gray-600">Special arrangements for female passengers</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <Check className="h-6 w-6 text-green-600 mt-1 flex-shrink-0" />
+              <div>
+                <h3 className="font-semibold">COVID Safety Measures</h3>
+                <p className="text-gray-600">All safety protocols followed</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Strong CTA */}
+      <section className="py-16 sm:py-20 bg-gradient-to-r from-orange-600 to-orange-700 text-white">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl sm:text-4xl font-bold mb-4">🙏 Plan Your Darshan This Weekend</h2>
+          <p className="text-xl mb-8 text-orange-100">Seats fill fast every week.</p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+            <Button size="lg" className="bg-white text-orange-600 hover:bg-orange-50 font-bold px-8 py-4 rounded-full text-lg shadow-lg hover:shadow-xl transition-all hover:scale-105">
+              Book Now & Confirm Your Seat
+            </Button>
+            <div className="flex items-center gap-2">
+              <Phone className="h-6 w-6" />
+              <span className="text-xl font-semibold">📞 Call / WhatsApp: +91-9876543210</span>
+            </div>
+          </div>
+
+          {/* First-time offer */}
+          <div className="inline-flex items-center gap-2 bg-yellow-400 text-yellow-900 px-6 py-3 rounded-full">
+            <Gift className="h-5 w-5" />
+            <span className="font-bold">🎯 First-time offer: Flat ₹200 OFF - Use code: DARSHAN200</span>
           </div>
         </div>
       </section>
@@ -471,57 +618,56 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <Bus className="h-6 w-6 text-orange-400" />
-                <h3 className="text-lg font-bold">WeekendDarshan</h3>
+                <Bus className="h-6 w-6 text-orange-500" />
+                <h3 className="text-xl font-bold">WeekendDarshan</h3>
               </div>
-              <p className="text-gray-400 text-sm">
-                Making weekend temple darshan comfortable and accessible for everyone.
-              </p>
+              <p className="text-gray-400">Making weekend temple darshan comfortable & accessible</p>
             </div>
-            
+
             <div>
-              <h4 className="font-semibold mb-4">Rajasthan & Braj</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>🔱 Khatu Shyam ji</li>
-                <li>🔱 Salasar Balaji</li>
-                <li>🕉️ Mathura Temples</li>
-                <li>🕉️ Taj Mahal</li>
+              <h4 className="font-semibold mb-4">Popular Destinations</h4>
+              <ul className="space-y-2 text-gray-400">
+                <li><a href="/rajasthan-tour" className="hover:text-orange-400">Khatu Shyam Ji</a></li>
+                <li><a href="/rajasthan-tour" className="hover:text-orange-400">Salasar Balaji</a></li>
+                <li><a href="/braj-yatra" className="hover:text-orange-400">Mathura & Vrindavan</a></li>
+                <li><a href="/ganga-yatra" className="hover:text-orange-400">Haridwar & Rishikesh</a></li>
+                <li><a href="/vaishno-devi" className="hover:text-orange-400">Vaishno Devi (Katra)</a></li>
               </ul>
             </div>
-            
-            <div>
-              <h4 className="font-semibold mb-4">Ganga & Vaishno</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>🌊 Har Ki Pauri</li>
-                <li>🌊 Neelkanth Mahadev</li>
-                <li>🔯 Vaishno Devi</li>
-                <li>🔯 Katra Yatra</li>
-              </ul>
-            </div>
-            
+
             <div>
               <h4 className="font-semibold mb-4">Contact</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>Phone: +91-9876543210</li>
-                <li>WhatsApp: +91-9876543210</li>
-                <li>Email: info@weekenddarshan.com</li>
-                <li>24/7 Customer Support</li>
+              <ul className="space-y-2 text-gray-400">
+                <li>📞 Phone / WhatsApp: +91-9876543210</li>
+                <li>📧 Email: info@weekenddarshan.com</li>
+                <li>🕐 24/7 Customer Support</li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-semibold mb-4">Quick Links</h4>
+              <ul className="space-y-2 text-gray-400">
+                <li><a href="/my-bookings" className="hover:text-orange-400">My Bookings</a></li>
+                <li><a href="#" className="hover:text-orange-400">About Us</a></li>
+                <li><a href="#" className="hover:text-orange-400">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-orange-400">Terms & Conditions</a></li>
               </ul>
             </div>
           </div>
-          
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
+
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
             <p>&copy; 2024 WeekendDarshan. All rights reserved.</p>
+            <p>Built with ❤️ for devotees by devotees</p>
           </div>
         </div>
       </footer>
 
       {/* Auth Modal */}
-      <LoginModal 
-        isOpen={isAuthModalOpen} 
-        onClose={() => setIsAuthModalOpen(false)} 
-      />
+      {isAuthModalOpen && (
+        <LoginModal onClose={() => setIsAuthModalOpen(false)} />
+      )}
 
+      {/* PWA Install Banner */}
       <PWAInstallBanner />
     </div>
   )
