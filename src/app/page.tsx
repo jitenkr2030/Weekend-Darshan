@@ -747,7 +747,7 @@ export default function Home() {
 
       {/* Auth Modal */}
       {isAuthModalOpen && (
-        <LoginModal onClose={() => setIsAuthModalOpen(false)} />
+        <LoginModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
       )}
 
       {/* PWA Install Banner */}

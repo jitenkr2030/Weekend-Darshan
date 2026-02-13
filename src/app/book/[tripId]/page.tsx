@@ -463,7 +463,7 @@ export default function BookingPage() {
                   <Checkbox
                     id="terms"
                     checked={acceptTerms}
-                    onCheckedChange={setAcceptTerms}
+                    onCheckedChange={(checked) => setAcceptTerms(checked as boolean)}
                   />
                   <Label htmlFor="terms" className="text-sm">
                     I agree to the terms and conditions

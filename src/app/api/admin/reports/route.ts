@@ -192,7 +192,7 @@ export async function GET(request: NextRequest) {
     }))
 
     // Recent trends (last 14 days)
-    const recentTrends = []
+    const recentTrends: any[] = []
     for (let i = 13; i >= 0; i--) {
       const date = subDays(endDate, i)
       const dateStart = new Date(date.setHours(0, 0, 0, 0))

@@ -158,7 +158,7 @@ async function main() {
       },
     ]
 
-    const createdTemples = []
+    const createdTemples: any[] = []
     for (const temple of temples) {
       const created = await prisma.temple.create({
         data: { ...temple, isActive: true },
@@ -197,7 +197,7 @@ async function main() {
       },
     ]
 
-    const createdRoutes = []
+    const createdRoutes: any[] = []
     for (const route of routes) {
       const created = await prisma.route.create({
         data: { ...route, isActive: true },
@@ -340,7 +340,7 @@ async function main() {
             { name: 'Companion', age: 26, gender: 'Female', mobile: '9876543299' },
           ]),
           totalAmount: trip.pricePerSeat * 2,
-          advanceAmount: trip.advancePrice * 2,
+          advanceAmount: (trip.advancePrice || trip.pricePerSeat * 0.5) * 2,
           paymentStatus: 'ADVANCE_PAID',
           bookingStatus: 'CONFIRMED',
           seats: JSON.stringify([`A${i + 1}`, `A${i + 2}`]),

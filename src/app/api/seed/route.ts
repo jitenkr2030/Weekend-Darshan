@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ 
         success: false, 
         error: 'Failed to initialize database',
-        details: initResult.error?.message || 'Unknown error'
+        details: initResult.error ? String(initResult.error) : 'Unknown error'
       }, { status: 500 })
     }
 
@@ -205,7 +205,7 @@ export async function POST(request: NextRequest) {
     console.error('Seeding error:', error)
     return NextResponse.json({ 
       success: false, 
-      error: error.message 
+      error: (error as Error).message 
     }, { status: 500 })
   }
 }

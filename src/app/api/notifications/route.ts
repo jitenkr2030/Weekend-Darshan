@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
 
     const notifications = await db.notification.findMany({
       where: {
-        userId: user.userId
+        userId: user.id as string
       },
       orderBy: {
         createdAt: 'desc'

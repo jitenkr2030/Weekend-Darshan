@@ -108,8 +108,8 @@ export function MobileNavigation() {
       </Sheet>
 
       <LoginModal 
-        open={isAuthModalOpen} 
-        onOpenChange={setIsAuthModalOpen} 
+        isOpen={isAuthModalOpen} 
+        onClose={() => setIsAuthModalOpen(false)} 
       />
     </>
   )

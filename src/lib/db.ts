@@ -49,19 +49,12 @@ function getDatabaseUrl(): string {
   }
   
   // No valid configuration found - throw a clear error
-  const availableVars = []
+  const availableVars: string[] = []
   if (process.env.DATABASE_URL) availableVars.push('DATABASE_URL')
-  if (process.env.NEON__POSTGRES_URL_NON_POOLING) availableVars.push('NEON__POSTGRES_URL_NON_POOLING')
-  if (process.env.NEON__POSTGRES_PASSWORD && process.env.NEON__PGHOST) availableVars.push('NEON__POSTGRES_PASSWORD + NEON__PGHOST')
   if (process.env.POSTGRES_URL_NON_POOLING) availableVars.push('POSTGRES_URL_NON_POOLING')
   if (process.env.POSTGRES_PRISMA_URL) availableVars.push('POSTGRES_PRISMA_URL')
   
-  throw new Error(
-    `Database connection string not found. Please set one of the following environment variables:\n` +
-    `1. DATABASE_URL (recommended) - e.g., postgresql://user:password@host:5432/database?sslmode=require\n` +
-    `2. NEON__POSTGRES_URL_NON_POOLING (from Vercel Neon integration)\n` +
-    `Currently available: ${availableVars.length > 0 ? availableVars.join(', ') : 'none'}`
-  )
+  throw new Error('Database connection string not found. Please set DATABASE_URL environment variable.')
 }
 
 // Initialize Prisma client with proper database URL

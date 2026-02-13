@@ -5,12 +5,9 @@
       "maxDuration": 30
     }
   },
-  "preview": {
-    "deploymentSuffix": "preview"
-  },
   "build": {
     "env": {
-      "NEXT_PUBLIC_APP_URL": "https://weekend-tau.vercel.app"
+      "NEXT_PUBLIC_APP_URL": "https://weekend-darshan.vercel.app"
     }
   }
 }

@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     console.error('Error refreshing weekend tours:', error)
     return NextResponse.json({ 
       success: false, 
-      error: error.message 
+      error: (error as Error).message 
     }, { status: 500 })
   }
 }
@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     return NextResponse.json({ 
       success: false, 
-      error: error.message 
+      error: (error as Error).message 
     }, { status: 500 })
   }
 }

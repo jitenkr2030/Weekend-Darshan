@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Check, Gift, Shield, TShirt, Users, Star, Clock, Bus, MapPin } from 'lucide-react'
+import { Check, Gift, Shield, Shirt, Users, Star, Clock, Bus, MapPin } from 'lucide-react'
 import { Trip } from '@/types'
 
 interface CustomerPackageProps {
@@ -36,7 +36,7 @@ export function CustomerPackage({ trip, onPackageSelect }: CustomerPackageProps)
         { icon: <Clock className="h-5 w-5" />, title: 'Planned Darshan', description: 'Optimized temple visit timing', included: true },
         { icon: <Users className="h-5 w-5" />, title: 'Trip Captain', description: 'Dedicated support person', included: true },
         { icon: <Clock className="h-5 w-5" />, title: 'Weekend Timing', description: 'Sat Night → Mon Morning', included: true },
-        { icon: <TShirt className="h-5 w-5" />, title: 'Branded T-Shirt', description: '"WeekendDarshan Yatri" T-Shirt', included: false },
+        { icon: <Shirt className="h-5 w-5" />, title: 'Branded T-Shirt', description: '"WeekendDarshan Yatri" T-Shirt', included: false },
         { icon: <Shield className="h-5 w-5" />, title: 'Travel Insurance', description: 'Yatra Suraksha Kavach coverage', included: false },
         { icon: <MapPin className="h-5 w-5" />, title: 'Meals Included', description: '1 Lunch + 1 Dinner', included: false }
       ]
@@ -53,7 +53,7 @@ export function CustomerPackage({ trip, onPackageSelect }: CustomerPackageProps)
         { icon: <Clock className="h-5 w-5" />, title: 'Planned Darshan', description: 'Optimized temple visit timing', included: true },
         { icon: <Users className="h-5 w-5" />, title: 'Trip Captain', description: 'Dedicated support person', included: true },
         { icon: <Clock className="h-5 w-5" />, title: 'Weekend Timing', description: 'Sat Night → Mon Morning', included: true },
-        { icon: <TShirt className="h-5 w-5" />, title: 'Branded T-Shirt', description: '"WeekendDarshan Yatri" T-Shirt', included: true },
+        { icon: <Shirt className="h-5 w-5" />, title: 'Branded T-Shirt', description: '"WeekendDarshan Yatri" T-Shirt', included: true },
         { icon: <Shield className="h-5 w-5" />, title: 'Travel Insurance', description: 'Yatra Suraksha Kavach coverage', included: true },
         { icon: <MapPin className="h-5 w-5" />, title: 'Meals Included', description: '1 Lunch + 1 Dinner', included: true }
       ]
@@ -70,7 +70,7 @@ export function CustomerPackage({ trip, onPackageSelect }: CustomerPackageProps)
         { icon: <Clock className="h-5 w-5" />, title: 'Planned Darshan', description: 'Optimized temple visit timing', included: true },
         { icon: <Users className="h-5 w-5" />, title: 'Trip Captain', description: 'Dedicated support person', included: true },
         { icon: <Clock className="h-5 w-5" />, title: 'Weekend Timing', description: 'Sat Night → Mon Morning', included: true },
-        { icon: <TShirt className="h-5 w-5" />, title: 'Branded T-Shirt', description: '"WeekendDarshan Yatri" T-Shirt', included: true },
+        { icon: <Shirt className="h-5 w-5" />, title: 'Branded T-Shirt', description: '"WeekendDarshan Yatri" T-Shirt', included: true },
         { icon: <Shield className="h-5 w-5" />, title: 'Travel Insurance', description: 'Yatra Suraksha Kavach coverage', included: true },
         { icon: <MapPin className="h-5 w-5" />, title: 'Meals Included', description: '1 Lunch + 1 Dinner', included: true },
         { icon: <Star className="h-5 w-5" />, title: 'VIP Boarding', description: 'Priority boarding + special seating', included: true },

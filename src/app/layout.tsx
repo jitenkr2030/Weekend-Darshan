@@ -15,10 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  name: "WeekendDarshan - Weekend Travel & Temple Darshan Booking",
+  title: "WeekendDarshan - Weekend Travel & Temple Darshan Booking",
   description: "Book comfortable weekend trips to Khatu Shyam, Salasar Balaji and more. AC buses, darshan assistance, and transparent pricing.",
   keywords: ["WeekendDarshan", "temple darshan", "weekend trips", "Khatu Shyam", "Salasar Balaji", "bus travel", "religious tourism"],
-  authors: [{ name: "WeekendDarshan Team" }],
   icons: {
     icon: "/favicon-optimized.svg",
     apple: "/favicon-optimized.svg",

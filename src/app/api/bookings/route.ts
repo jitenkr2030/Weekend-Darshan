@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
     const booking = await db.booking.create({
       data: {
         bookingId,
-        userId: user.userId,
+        userId: user.id as string,
         tripId,
         passengerCount,
         passengerDetails,
@@ -149,7 +149,7 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status')
 
     let whereClause: any = {
-      userId: user.userId
+      userId: user.id as string
     }
     
     if (status) {

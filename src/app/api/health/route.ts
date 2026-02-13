@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       status: 'unhealthy',
       timestamp: new Date().toISOString(),
-      error: error.message,
+      error: (error as Error).message,
       database: {
         connected: false
       }

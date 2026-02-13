@@ -22,9 +22,8 @@ import {
   Phone,
   MessageCircle,
   IndianRupee,
-  Temple,
   Mountain,
-  Water,
+  Droplets,
   Crown
 } from 'lucide-react'
 import Link from 'next/link'

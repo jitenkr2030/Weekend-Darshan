@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
     })
   } catch (error) {
     return NextResponse.json(
-      { success: false, error: 'Failed to check environment', details: error.message },
+      { success: false, error: 'Failed to check environment', details: (error as Error).message },
       { status: 500 }
     )
   }

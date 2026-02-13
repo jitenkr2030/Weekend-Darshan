@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({
           success: false,
           error: 'Database initialization failed',
-          details: initResult.error?.message || 'Unknown error'
+          details: initResult.error ? String(initResult.error) : 'Unknown error'
         }, { status: 500 })
       }
       
@@ -86,7 +86,7 @@ export async function GET(request: NextRequest) {
       { 
         success: false, 
         error: 'Failed to fetch trips',
-        details: error.message 
+        details: (error as Error).message 
       },
       { status: 500 }
     )
