@@ -15,6 +15,16 @@ import { PWAInstallBanner } from '@/components/pwa-install-banner'
 import { LoginModal } from '@/components/auth/login-modal'
 import { WhatsAppButton } from '@/components/whatsapp-button'
 
+// Progress component
+const Progress = ({ value, className }: { value: number; className?: string }) => (
+  <div className={`w-full bg-gray-200 rounded-full h-2 ${className}`}>
+    <div 
+      className="bg-orange-600 h-2 rounded-full transition-all duration-300" 
+      style={{ width: `${Math.min(100, Math.max(0, value))}%` }}
+    />
+  </div>
+)
+
 export default function Home() {
   const [trips, setTrips] = useState<Trip[]>([])
   const [loading, setLoading] = useState(true)
@@ -214,8 +224,8 @@ export default function Home() {
               <div className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <div className="text-2xl font-bold text-orange-600">₹2,000</div>
-                    <div className="text-sm text-gray-500">per person</div>
+                    <div className="text-2xl font-bold text-orange-600">💰 ₹2,000 – All Inclusive</div>
+                    <div className="text-sm text-gray-500">Travel + Darshan + Food + T-Shirt + Insurance</div>
                   </div>
                   <div className="text-right">
                     <div className="text-sm text-gray-600">Sat 10:00 PM</div>
@@ -260,8 +270,8 @@ export default function Home() {
               <div className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <div className="text-2xl font-bold text-purple-600">₹1,800</div>
-                    <div className="text-sm text-gray-500">per person</div>
+                    <div className="text-2xl font-bold text-purple-600">💰 ₹1,800 – All Inclusive</div>
+                    <div className="text-sm text-gray-500">Travel + Darshan + Food + T-Shirt + Insurance</div>
                   </div>
                   <div className="text-right">
                     <div className="text-sm text-gray-600">Sat 10:00 PM</div>
@@ -306,8 +316,8 @@ export default function Home() {
               <div className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <div className="text-2xl font-bold text-blue-600">₹2,100</div>
-                    <div className="text-sm text-gray-500">per person</div>
+                    <div className="text-2xl font-bold text-blue-600">💰 ₹2,100 – All Inclusive</div>
+                    <div className="text-sm text-gray-500">Travel + Darshan + Food + T-Shirt + Insurance</div>
                   </div>
                   <div className="text-right">
                     <div className="text-sm text-gray-600">Sat 10:00 PM</div>
@@ -352,8 +362,8 @@ export default function Home() {
               <div className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <div className="text-2xl font-bold text-pink-600">₹3,500</div>
-                    <div className="text-sm text-gray-500">per person</div>
+                    <div className="text-2xl font-bold text-pink-600">💰 ₹3,500 – All Inclusive</div>
+                    <div className="text-sm text-gray-500">Travel + Darshan + Food + T-Shirt + Insurance</div>
                   </div>
                   <div className="text-right">
                     <div className="text-sm text-gray-600">Sat 4:00 PM</div>
@@ -418,6 +428,79 @@ export default function Home() {
             <p className="text-lg text-gray-700 italic">
               👨‍💼 "Built by a devotee who travelled these routes himself and solved every problem."
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* What Makes Us Special */}
+      <section className="py-12 sm:py-16 bg-gradient-to-r from-orange-50 to-yellow-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">🌟 What Makes WeekendDarshan Special</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">We don't just take you to temples... we take care of your entire spiritual journey.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <div className="text-center">
+              <div className="bg-orange-100 rounded-full p-4 w-16 h-16 mx-auto mb-4">
+                <Bus className="h-8 w-8 text-orange-600" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">Comfortable Travel</h3>
+              <p className="text-gray-600">Premium AC buses with experienced drivers and clean seating</p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-purple-100 rounded-full p-4 w-16 h-16 mx-auto mb-4">
+                <Shield className="h-8 w-8 text-purple-600" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">Guaranteed Darshan</h3>
+              <p className="text-gray-600">Optimized timings and planned flow for maximum darshan success</p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-green-100 rounded-full p-4 w-16 h-16 mx-auto mb-4">
+                <MapPin className="h-8 w-8 text-green-600" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">Food Included</h3>
+              <p className="text-gray-600">Hygienic meals at clean stops during the journey</p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-blue-100 rounded-full p-4 w-16 h-16 mx-auto mb-4">
+                <Shield className="h-8 w-8 text-blue-600" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">Safety Covered</h3>
+              <p className="text-gray-600">Travel insurance and emergency support throughout the journey</p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-yellow-100 rounded-full p-4 w-16 h-16 mx-auto mb-4">
+                <Star className="h-8 w-8 text-yellow-600" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">Rewards for Every Trip</h3>
+              <p className="text-gray-600">Loyalty points, discounts, and exclusive member benefits</p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-red-100 rounded-full p-4 w-16 h-16 mx-auto mb-4">
+                <Users className="h-8 w-8 text-red-600" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">Community Experience</h3>
+              <p className="text-gray-600">Join fellow devotees and make your spiritual journey memorable</p>
+            </div>
+          </div>
+
+          <div className="mt-12 text-center">
+            <div className="inline-flex items-center gap-3 bg-white rounded-full px-6 py-3 shadow-lg">
+              <div className="bg-orange-100 rounded-full p-2">
+                <Star className="h-5 w-5 text-orange-600" />
+              </div>
+              <div className="text-left">
+                <div className="font-bold text-gray-900">🎯 Strong Trust Line</div>
+                <div className="text-sm text-gray-600">"Built by a devotee who personally travelled these routes and removed every pain point."</div>
+              </div>
+            </div>
+            <p className="text-sm text-gray-500 mt-3 italic">This line is very powerful for conversion</p>
           </div>
         </div>
       </section>
