@@ -11,37 +11,34 @@ export async function POST(request: NextRequest) {
     //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     // }
 
-    // Run the migration SQL
-    const migrationSQL = `
-      -- Add new columns to trips table
-      ALTER TABLE trips 
-      ADD COLUMN IF NOT EXISTS "packageId" TEXT,
-      ADD COLUMN IF NOT EXISTS "includesTShirt" BOOLEAN DEFAULT false,
-      ADD COLUMN IF NOT EXISTS "includesInsurance" BOOLEAN DEFAULT false,
-      ADD COLUMN IF NOT EXISTS "includesMeals" BOOLEAN DEFAULT false;
+    // Run the migration - split into separate statements
+    const migrations = [
+      // Add new columns to trips table
+      `ALTER TABLE trips ADD COLUMN IF NOT EXISTS "packageId" TEXT`,
+      `ALTER TABLE trips ADD COLUMN IF NOT EXISTS "includesTShirt" BOOLEAN DEFAULT false`,
+      `ALTER TABLE trips ADD COLUMN IF NOT EXISTS "includesInsurance" BOOLEAN DEFAULT false`,
+      `ALTER TABLE trips ADD COLUMN IF NOT EXISTS "includesMeals" BOOLEAN DEFAULT false`,
 
-      -- Add new columns to users table
-      ALTER TABLE users 
-      ADD COLUMN IF NOT EXISTS "loyaltyLevel" TEXT DEFAULT 'BRONZE',
-      ADD COLUMN IF NOT EXISTS "totalTrips" INTEGER DEFAULT 0,
-      ADD COLUMN IF NOT EXISTS "loyaltyPoints" INTEGER DEFAULT 0,
-      ADD COLUMN IF NOT EXISTS "referralCode" TEXT,
-      ADD COLUMN IF NOT EXISTS "referredBy" TEXT,
-      ADD COLUMN IF NOT EXISTS "referralCount" INTEGER DEFAULT 0,
-      ADD COLUMN IF NOT EXISTS "referralEarnings" DECIMAL(10,2) DEFAULT 0.00;
+      // Add new columns to users table
+      `ALTER TABLE users ADD COLUMN IF NOT EXISTS "loyaltyLevel" TEXT DEFAULT 'BRONZE'`,
+      `ALTER TABLE users ADD COLUMN IF NOT EXISTS "totalTrips" INTEGER DEFAULT 0`,
+      `ALTER TABLE users ADD COLUMN IF NOT EXISTS "loyaltyPoints" INTEGER DEFAULT 0`,
+      `ALTER TABLE users ADD COLUMN IF NOT EXISTS "referralCode" TEXT`,
+      `ALTER TABLE users ADD COLUMN IF NOT EXISTS "referredBy" TEXT`,
+      `ALTER TABLE users ADD COLUMN IF NOT EXISTS "referralCount" INTEGER DEFAULT 0`,
+      `ALTER TABLE users ADD COLUMN IF NOT EXISTS "referralEarnings" DECIMAL(10,2) DEFAULT 0.00`,
 
-      -- Add new columns to bookings table
-      ALTER TABLE bookings 
-      ADD COLUMN IF NOT EXISTS "packageId" TEXT,
-      ADD COLUMN IF NOT EXISTS "tShirtSize" TEXT,
-      ADD COLUMN IF NOT EXISTS "tShirtOrdered" BOOLEAN DEFAULT false,
-      ADD COLUMN IF NOT EXISTS "insuranceId" TEXT,
-      ADD COLUMN IF NOT EXISTS "hasInsurance" BOOLEAN DEFAULT false,
-      ADD COLUMN IF NOT EXISTS "referralCode" TEXT,
-      ADD COLUMN IF NOT EXISTS "referralDiscount" DECIMAL(10,2);
+      // Add new columns to bookings table
+      `ALTER TABLE bookings ADD COLUMN IF NOT EXISTS "packageId" TEXT`,
+      `ALTER TABLE bookings ADD COLUMN IF NOT EXISTS "tShirtSize" TEXT`,
+      `ALTER TABLE bookings ADD COLUMN IF NOT EXISTS "tShirtOrdered" BOOLEAN DEFAULT false`,
+      `ALTER TABLE bookings ADD COLUMN IF NOT EXISTS "insuranceId" TEXT`,
+      `ALTER TABLE bookings ADD COLUMN IF NOT EXISTS "hasInsurance" BOOLEAN DEFAULT false`,
+      `ALTER TABLE bookings ADD COLUMN IF NOT EXISTS "referralCode" TEXT`,
+      `ALTER TABLE bookings ADD COLUMN IF NOT EXISTS "referralDiscount" DECIMAL(10,2)`,
 
-      -- Create new tables if they don't exist
-      CREATE TABLE IF NOT EXISTS "loyalty_rewards" (
+      // Create new tables
+      `CREATE TABLE IF NOT EXISTS "loyalty_rewards" (
         "id" TEXT NOT NULL,
         "userId" TEXT NOT NULL,
         "level" TEXT NOT NULL,
@@ -53,11 +50,10 @@ export async function POST(request: NextRequest) {
         "usedAt" TIMESTAMP(3),
         "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
         "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
         CONSTRAINT "loyalty_rewards_pkey" PRIMARY KEY ("id")
-      );
+      )`,
 
-      CREATE TABLE IF NOT EXISTS "referral_rewards" (
+      `CREATE TABLE IF NOT EXISTS "referral_rewards" (
         "id" TEXT NOT NULL,
         "referrerId" TEXT NOT NULL,
         "referredId" TEXT NOT NULL,
@@ -67,11 +63,10 @@ export async function POST(request: NextRequest) {
         "status" TEXT NOT NULL DEFAULT 'PENDING',
         "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
         "paidAt" TIMESTAMP(3),
-
         CONSTRAINT "referral_rewards_pkey" PRIMARY KEY ("id")
-      );
+      )`,
 
-      CREATE TABLE IF NOT EXISTS "customer_packages" (
+      `CREATE TABLE IF NOT EXISTS "customer_packages" (
         "id" TEXT NOT NULL,
         "name" TEXT NOT NULL,
         "description" TEXT NOT NULL,
@@ -86,11 +81,10 @@ export async function POST(request: NextRequest) {
         "isActive" BOOLEAN NOT NULL DEFAULT true,
         "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
         "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
         CONSTRAINT "customer_packages_pkey" PRIMARY KEY ("id")
-      );
+      )`,
 
-      CREATE TABLE IF NOT EXISTS "tshirt_orders" (
+      `CREATE TABLE IF NOT EXISTS "tshirt_orders" (
         "id" TEXT NOT NULL,
         "userId" TEXT NOT NULL,
         "bookingId" TEXT NOT NULL,
@@ -98,12 +92,11 @@ export async function POST(request: NextRequest) {
         "status" TEXT NOT NULL DEFAULT 'PENDING',
         "deliveredAt" TIMESTAMP(3),
         "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
         CONSTRAINT "tshirt_orders_pkey" PRIMARY KEY ("id"),
         CONSTRAINT "tshirt_orders_bookingId_key" UNIQUE ("bookingId")
-      );
+      )`,
 
-      CREATE TABLE IF NOT EXISTS "insurance_coverage" (
+      `CREATE TABLE IF NOT EXISTS "insurance_coverage" (
         "id" TEXT NOT NULL,
         "bookingId" TEXT NOT NULL,
         "provider" TEXT NOT NULL,
@@ -115,24 +108,25 @@ export async function POST(request: NextRequest) {
         "startDate" TIMESTAMP(3) NOT NULL,
         "endDate" TIMESTAMP(3) NOT NULL,
         "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
         CONSTRAINT "insurance_coverage_pkey" PRIMARY KEY ("id"),
         CONSTRAINT "insurance_coverage_bookingId_key" UNIQUE ("bookingId")
-      );
+      )`,
 
-      -- Create indexes for better performance
-      CREATE INDEX IF NOT EXISTS "idx_trips_packageId" ON "trips"("packageId");
-      CREATE INDEX IF NOT EXISTS "idx_users_loyaltyLevel" ON "users"("loyaltyLevel");
-      CREATE INDEX IF NOT EXISTS "idx_users_referralCode" ON "users"("referralCode");
-      CREATE INDEX IF NOT EXISTS "idx_bookings_packageId" ON "bookings"("packageId");
-      CREATE INDEX IF NOT EXISTS "idx_bookings_referralCode" ON "bookings"("referralCode");
-      CREATE INDEX IF NOT EXISTS "idx_loyalty_rewards_userId" ON "loyalty_rewards"("userId");
-      CREATE INDEX IF NOT EXISTS "idx_referral_rewards_referrerId" ON "referral_rewards"("referrerId");
-      CREATE INDEX IF NOT EXISTS "idx_referral_rewards_referredId" ON "referral_rewards"("referredId");
-    `
+      // Create indexes
+      `CREATE INDEX IF NOT EXISTS "idx_trips_packageId" ON "trips"("packageId")`,
+      `CREATE INDEX IF NOT EXISTS "idx_users_loyaltyLevel" ON "users"("loyaltyLevel")`,
+      `CREATE INDEX IF NOT EXISTS "idx_users_referralCode" ON "users"("referralCode")`,
+      `CREATE INDEX IF NOT EXISTS "idx_bookings_packageId" ON "bookings"("packageId")`,
+      `CREATE INDEX IF NOT EXISTS "idx_bookings_referralCode" ON "bookings"("referralCode")`,
+      `CREATE INDEX IF NOT EXISTS "idx_loyalty_rewards_userId" ON "loyalty_rewards"("userId")`,
+      `CREATE INDEX IF NOT EXISTS "idx_referral_rewards_referrerId" ON "referral_rewards"("referrerId")`,
+      `CREATE INDEX IF NOT EXISTS "idx_referral_rewards_referredId" ON "referral_rewards"("referredId")`
+    ]
 
-    // Execute the migration
-    await db.$executeRawUnsafe(migrationSQL)
+    // Execute each migration statement
+    for (const migration of migrations) {
+      await db.$executeRawUnsafe(migration)
+    }
 
     return NextResponse.json({
       success: true,
