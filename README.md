@@ -1,19 +1,19 @@
 # 🚌 WeekendDarshan
 
-### *Weekend Travel & Temple Darshan Booking Platform*
+### *Complete Weekend Travel & Temple Darshan Booking Platform*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
 
-A comprehensive weekend travel and temple darshan booking platform that makes spiritual journeys accessible and comfortable for everyone.
+A comprehensive weekend travel and temple darshan booking platform with **complete customer experience features** including loyalty rewards, referral system, premium packages, and more. Making spiritual journeys accessible, comfortable, and rewarding for everyone.
 
 ---
 
 ## 🎯 Core Purpose
 
-To allow users to **easily discover, book, and travel** on **weekend religious trips** (starting with **Delhi → Khatu Shyam ji**) with **simple booking, transparent pricing, and smooth coordination**.
+To allow users to **easily discover, book, and travel** on **weekend religious trips** with **premium packages, loyalty rewards, referral benefits, and a complete customer experience system** while maintaining the spiritual essence of the journey.
 
 ---
 
@@ -22,11 +22,17 @@ To allow users to **easily discover, book, and travel** on **weekend religious t
 ### 👥 User-Side Features
 - ✅ **User Authentication**: Mobile/OTP-based login system
 - ✅ **Trip Discovery**: Browse upcoming weekend trips with detailed information
+- ✅ **Premium Packages**: 3-tier package system (Standard, Premium, VIP)
+- ✅ **Loyalty Rewards**: Bronze, Silver, Gold levels with progressive benefits
+- ✅ **Referral System**: Earn rewards by referring friends and family
+- ✅ **T-Shirt Orders**: Branded "WeekendDarshan Yatri" T-shirts for confirmed bookings
+- ✅ **Travel Insurance**: Yatra Suraksha Kavach coverage with trusted partners
 - ✅ **Trip Details**: Comprehensive trip information with inclusions, exclusions, and policies
 - ✅ **Seat Booking**: Multi-passenger booking with detailed passenger information
 - ✅ **Payment System**: Secure payment integration with UPI/Card support
 - ✅ **Digital Tickets**: QR code-based booking confirmation and tickets
 - ✅ **My Bookings**: View and manage all bookings with search functionality
+- ✅ **WhatsApp Support**: 24/7 customer support via WhatsApp
 - ✅ **Notifications**: Real-time updates and alerts
 - ✅ **Responsive Design**: Mobile-first design that works on all devices
 
@@ -35,10 +41,22 @@ To allow users to **easily discover, book, and travel** on **weekend religious t
 - ✅ **Dashboard**: Overview of trips, bookings, and revenue
 - ✅ **Trip Management**: Full CRUD operations for trips
 - ✅ **Booking Management**: View, manage, and cancel bookings
+- ✅ **Customer Management**: View customer details and booking history
+- ✅ **Loyalty Management**: Track and manage customer loyalty levels
+- ✅ **Referral Management**: Monitor and process referral rewards
+- ✅ **Package Management**: Create and manage premium packages
 - ✅ **Reports & Analytics**: Comprehensive reports with CSV export
 - ✅ **Real-time Statistics**: Track revenue, occupancy, and performance
 - ✅ **Payment Management**: Confirm payments and process refunds
-- ✅ **Customer Management**: View customer details and booking history
+
+### 🎁 Customer Experience Features
+- ✅ **Package Selection**: Choose from Standard, Premium, or VIP packages
+- ✅ **All-Inclusive Pricing**: Transparent pricing with clear value proposition
+- ✅ **Loyalty Points**: Earn points on every trip and redeem rewards
+- ✅ **Referral Codes**: Personal referral codes for sharing with friends
+- ✅ **Group Benefits**: Special pricing and benefits for groups
+- ✅ **Emergency Support**: 24/7 support during journeys
+- ✅ **Community Building**: Join a community of fellow devotees
 
 ---
 
@@ -52,13 +70,18 @@ To allow users to **easily discover, book, and travel** on **weekend religious t
 
 ### Database & Backend
 - **🗄️ Prisma** - Modern TypeScript ORM
-- **💾 SQLite** - Lightweight database for development
-- **🔐 NextAuth.js** - Authentication system (ready for implementation)
+- **💾 PostgreSQL** - Production database
+- **🔐 JWT Authentication** - Secure token-based authentication
 
 ### UI/UX
 - **🎯 Lucide React** - Beautiful icons
 - **🌈 Framer Motion** - Smooth animations
 - **📱 Responsive Design** - Mobile-first approach
+
+### Integrations
+- **💳 Razorpay** - Payment gateway integration
+- **📱 WhatsApp** - Customer support integration
+- **🛡️ Insurance Partners** - HDFC ERGO, ICICI Lombard
 
 ---
 
@@ -67,6 +90,7 @@ To allow users to **easily discover, book, and travel** on **weekend religious t
 ### Prerequisites
 - Node.js 18+ and npm/yarn/bun
 - Git
+- PostgreSQL (for production)
 
 ### Installation
 
@@ -86,7 +110,7 @@ cp .env.example .env.local
 bun run db:push
 
 # Seed sample data (optional but recommended)
-bun run seed.ts
+bun run db:seed-simple
 
 # Start development server
 bun run dev
@@ -100,11 +124,13 @@ Create a `.env.local` file in the root directory:
 
 ```env
 # Database
-DATABASE_URL="file:./dev.db"
+DATABASE_URL="postgresql://username:password@localhost:5432/weekenddarshan"
 
-# NextAuth.js (for future implementation)
-NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="your-secret-key"
+# JWT Secret
+JWT_SECRET="your-super-secret-jwt-key-at-least-32-characters"
+
+# Next.js
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
 
 # Payment Gateway (for production)
 RAZORPAY_KEY_ID="your-razorpay-key"
@@ -124,7 +150,10 @@ src/
 │   ├── api/                    # API routes
 │   │   ├── trips/              # Trip management APIs
 │   │   ├── bookings/           # Booking APIs
-│   │   └── payments/           # Payment APIs
+│   │   ├── payments/           # Payment APIs
+│   │   ├── auth/               # Authentication APIs
+│   │   ├── migrate-db/         # Database migration
+│   │   └── seed/               # Database seeding
 │   ├── book/[tripId]/          # Booking flow
 │   ├── my-bookings/            # User bookings
 │   ├── payment/[bookingId]/    # Payment processing
@@ -133,7 +162,10 @@ src/
 │   └── page.tsx                # Homepage
 ├── components/
 │   ├── ui/                     # shadcn/ui components
-│   └── trip-card.tsx           # Custom trip card component
+│   ├── customer-package.tsx    # Package selection
+│   ├── loyalty-rewards.tsx     # Loyalty system
+│   ├── referral-system.tsx     # Referral system
+│   └── whatsapp-button.tsx     # WhatsApp support
 ├── types/
 │   └── index.ts                # TypeScript type definitions
 └── lib/
@@ -147,14 +179,22 @@ src/
 
 The application uses a comprehensive database schema with the following models:
 
-- **Users** - User accounts and authentication
+### Core Models
+- **Users** - User accounts, authentication, loyalty, and referral data
 - **Temples** - Temple destinations and information
 - **Routes** - Bus routes between cities
-- **Trips** - Scheduled trips with dates and pricing
-- **Bookings** - User bookings and passenger details
+- **Trips** - Scheduled trips with dates, pricing, and package info
+- **Bookings** - User bookings with package and referral details
 - **Payments** - Payment records and transactions
 - **Notifications** - User notifications and alerts
 - **Settings** - Admin configuration settings
+
+### Customer Experience Models
+- **LoyaltyRewards** - Loyalty program rewards and redemptions
+- **ReferralRewards** - Referral program rewards and tracking
+- **CustomerPackages** - Premium package definitions
+- **TShirtOrders** - Branded T-shirt orders
+- **InsuranceCoverage** - Travel insurance coverage details
 
 ### Database Diagram
 
@@ -162,61 +202,64 @@ The application uses a comprehensive database schema with the following models:
 erDiagram
     User ||--o{ Booking : makes
     User ||--o{ Notification : receives
+    User ||--o{ LoyaltyReward : earns
+    User ||--o{ ReferralReward : gets
+    User ||--o{ TShirtOrder : receives
     Trip ||--o{ Booking : contains
     Trip }o--|| Route : uses
     Trip }o--|| Temple : visits
+    Trip ||--o{ LoyaltyReward : triggers
     Booking ||--o{ Payment : has
+    Booking ||--o{ ReferralReward : generates
+    Booking ||--o{ TShirtOrder : includes
+    Booking ||--o{ InsuranceCoverage : has
 ```
 
 ---
 
 ## 🎯 Key Features
 
-### Trip Discovery
-- Browse upcoming weekend trips
-- Filter by destination and date
-- Real-time seat availability
-- Transparent pricing with advance options
+### Trip Discovery & Booking
+- Browse upcoming weekend trips with real-time availability
+- Filter by destination, date, and package type
+- Multi-passenger booking with detailed passenger information
+- Secure payment processing with multiple options
+- Digital tickets with QR code verification
 
-### Booking Flow
-- Multi-passenger booking (up to 6 seats)
-- Detailed passenger information collection
-- Multiple boarding point selection
-- Secure payment processing
-
-### Digital Tickets
-- QR code-based verification
-- Comprehensive booking details
-- Download and sharing options
-- Emergency contact information
+### Customer Experience System
+- **Premium Packages**: Standard, Premium, and VIP tiers with progressive benefits
+- **Loyalty Program**: 3-tier system (Bronze, Silver, Gold) with rewards
+- **Referral System**: Earn rewards by referring friends and family
+- **T-Shirt Program**: Free branded T-shirts for confirmed bookings
+- **Travel Insurance**: Comprehensive coverage with trusted partners
 
 ### Admin Dashboard
 - Real-time statistics and analytics
-- Trip and booking management
-- Revenue tracking
-- User support tools
+- Complete trip and booking management
+- Customer relationship management
+- Loyalty and referral program administration
+- Revenue tracking and reporting
 
 ---
 
 ## 🔐 Admin Access
 
 For demonstration purposes, use these credentials:
-- **Email**: admin@weekenddarshan.com
-- **Password**: admin123
-
-Access the admin panel at `/admin/login`
+- **Mobile**: 8700189551 (use OTP-based login)
+- **Admin Panel**: Available at `/admin/login`
 
 ---
 
 ## 🌟 Sample Data
 
 The application includes sample data for:
-- **Temples**: Khatu Shyam Ji, Salasar Balaji
+- **Temples**: Khatu Shyam Ji, Salasar Balaji, Krishna Janmabhoomi, Har Ki Pauri, Vaishno Devi
 - **Routes**: Delhi to various temple destinations
 - **Trips**: Weekend trips with realistic schedules and pricing
+- **Packages**: Standard, Premium, and VIP packages
 - **Bookings**: Sample booking data for testing
 
-Run `bun run seed.ts` to populate the database with sample data.
+Run `bun run db:seed-simple` to populate the database with sample data.
 
 ---
 
@@ -236,19 +279,23 @@ The application is fully responsive and optimized for:
 - **Accessibility**: WCAG compliant components
 - **Security**: Input validation and XSS protection
 - **Error Handling**: Comprehensive error boundaries
+- **PWA Support**: Progressive Web App features
 
 ---
 
 ## 📸 Screenshots
 
-### Homepage
-![Homepage](https://via.placeholder.com/800x400/FF6B35/FFFFFF?text=WeekendDarshan+Homepage)
+### Homepage with Premium Features
+![Homepage](https://via.placeholder.com/800x400/FF6B35/FFFFFF?text=WeekendDarshan+Premium+Homepage)
 
-### Trip Details
-![Trip Details](https://via.placeholder.com/800x400/4ECDC4/FFFFFF?text=Trip+Details+Page)
+### Package Selection
+![Package Selection](https://via.placeholder.com/800x400/4ECDC4/FFFFFF?text=Package+Selection)
 
-### Booking Flow
-![Booking](https://via.placeholder.com/800x400/45B7D1/FFFFFF?text=Booking+Flow)
+### Loyalty Rewards
+![Loyalty Rewards](https://via.placeholder.com/800x400/45B7D1/FFFFFF?text=Loyalty+Rewards)
+
+### Referral System
+![Referral System](https://via.placeholder.com/800x400/96CEB4/FFFFFF?text=Referral+System)
 
 ### Admin Dashboard
 ![Admin Dashboard](https://via.placeholder.com/800x400/96CEB4/FFFFFF?text=Admin+Dashboard)
@@ -259,20 +306,22 @@ The application is fully responsive and optimized for:
 
 ### Planned Features
 - 📱 **Mobile App**: React Native companion app
-- 🔔 **WhatsApp Integration**: Automated notifications
+- 🔔 **Advanced WhatsApp**: Automated notifications and booking
 - 📊 **Advanced Analytics**: Google Analytics integration
 - 🎟️ **QR Code Scanning**: Mobile boarding passes
 - 📍 **Live Tracking**: Real-time bus location
 - 💳 **Multiple Payment Gateways**: PhonePe, GPay, Paytm
 - 🌍 **Multi-language**: Hindi and regional languages
 - ⭐ **Reviews & Ratings**: User feedback system
+- 🎪 **Group Tours**: Special group booking features
+- 🏨 **Hotel Integration**: Partner hotel bookings
 
 ### Advanced Admin Features
-- 📈 **Advanced Reports**: Excel/CSV exports
-- 👥 **Agent Management**: Multi-agent support
-- 🎫 **Ticket Templates**: Customizable ticket designs
-- 📢 **Broadcast Messages**: Bulk notifications
-- 🔧 **Settings Management**: Dynamic configuration
+- 📈 **Advanced Reports**: Excel/CSV exports with custom filters
+- 👥 **Agent Management**: Multi-agent support system
+- 🎫 **Dynamic Pricing**: Automated pricing based on demand
+- 📢 **Campaign Management**: Marketing campaign tools
+- 🔧 **Settings Management**: Dynamic configuration system
 
 ---
 
@@ -293,9 +342,9 @@ bun run db:generate  # Generate Prisma client
 bun run db:migrate   # Run database migrations
 bun run db:reset     # Reset database
 
-# Testing (to be added)
-bun run test         # Run tests
-bun run test:watch   # Run tests in watch mode
+# Data Management
+bun run db:seed-simple    # Seed with simple sample data
+bun run db:seed            # Seed with comprehensive data
 ```
 
 ### Code Quality
@@ -309,18 +358,27 @@ bun run test:watch   # Run tests in watch mode
 
 ## 📊 API Documentation
 
-### Trips API
+### Core APIs
 - `GET /api/trips` - Get all trips
 - `GET /api/trips/[id]` - Get specific trip
-
-### Bookings API
-- `GET /api/bookings` - Get all bookings
 - `POST /api/bookings` - Create new booking
 - `GET /api/bookings/[id]` - Get specific booking
 - `GET /api/bookings/search` - Search bookings
 
-### Payments API
-- `POST /api/payments` - Process payment
+### Authentication APIs
+- `POST /api/auth/login` - User login
+- `POST /api/auth/verify` - OTP verification
+- `GET /api/auth/me` - Get current user
+
+### Customer Experience APIs
+- `GET /api/loyalty/rewards` - Get loyalty rewards
+- `POST /api/referral/claim` - Claim referral reward
+- `POST /api/packages/` - Get available packages
+
+### Admin APIs
+- `POST /api/admin/login` - Admin login
+- `GET /api/admin/dashboard` - Admin dashboard data
+- `GET /api/admin/reports` - Generate reports
 
 ---
 
@@ -342,38 +400,13 @@ vercel login
 vercel --prod
 ```
 
-#### Manual Deployment Steps
-
-1. **Set Environment Variables in Vercel Dashboard**:
-   ```bash
-   DATABASE_URL="file:./dev.db"
-   NEXTAUTH_URL="https://your-domain.vercel.app"
-   NEXTAUTH_SECRET="your-secure-secret-key"
-   JWT_SECRET="your-jwt-secret"
-   RAZORPAY_KEY_ID="your-razorpay-key"
-   RAZORPAY_KEY_SECRET="your-razorpay-secret"
-   ```
-
-2. **Deploy via GitHub Integration**:
-   - Connect your repository to Vercel
-   - Vercel will auto-deploy on push to main branch
-   - Build settings are pre-configured in `vercel.json`
-
-3. **Seed Database After Deployment**:
-   ```bash
-   # Call the seed endpoint (requires auth in production)
-   curl -X POST https://your-domain.vercel.app/api/seed \
-        -H "Authorization: Bearer YOUR_SEED_API_KEY"
-   ```
-
 #### Environment Variables Required
 
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `DATABASE_URL` | Database connection string | `file:./dev.db` |
-| `NEXTAUTH_URL` | Your deployed app URL | `https://your-domain.vercel.app` |
-| `NEXTAUTH_SECRET` | NextAuth secret key | `your-secure-secret-key` |
-| `JWT_SECRET` | JWT signing secret | `your-jwt-secret` |
+| `DATABASE_URL` | PostgreSQL connection string | `postgresql://user:password@host:5432/db` |
+| `JWT_SECRET` | JWT signing secret | `your-super-secret-jwt-key` |
+| `NEXT_PUBLIC_APP_URL` | Your deployed app URL | `https://your-domain.vercel.app` |
 | `RAZORPAY_KEY_ID` | Razorpay test/live key | `rzp_test_...` |
 | `RAZORPAY_KEY_SECRET` | Razorpay secret | `your-razorpay-secret` |
 
@@ -386,15 +419,6 @@ docker build -t weekend-darshan .
 docker run -p 3000:3000 weekend-darshan
 ```
 
-### 🏠 Traditional Hosting
-```bash
-# Build for production
-bun run build
-
-# Start production server
-bun start
-```
-
 ### 📊 Health Check
 
 After deployment, test your application:
@@ -404,16 +428,10 @@ curl https://your-domain.vercel.app/api/health
 
 # Check trips API
 curl https://your-domain.vercel.app/api/trips
+
+# Run database migration (if needed)
+curl -X POST https://your-domain.vercel.app/api/migrate-db
 ```
-
-### 🔧 Troubleshooting Common Issues
-
-1. **DATABASE_URL not found**: Ensure environment variable is set in Vercel dashboard
-2. **Prisma Client error**: Run `prisma generate` during build
-3. **Build timeout**: Increase function timeout in `vercel.json`
-4. **Database empty**: Call `/api/seed` endpoint to populate data
-
-For detailed deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md).
 
 ---
 
@@ -436,8 +454,8 @@ For detailed deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md).
 
 ## 📞 Support & Contact
 
-- **Phone**: +91-9876543210
-- **WhatsApp**: +91-9876543210
+- **Phone**: +91-8700189551
+- **WhatsApp**: +91-8700189551
 - **Email**: info@weekenddarshan.com
 - **GitHub Issues**: [Create an issue](https://github.com/jitenkr2030/Weekend-Darshan/issues)
 - **24/7 Support**: Available for all passengers
@@ -452,7 +470,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-Built with devotion for the spiritual community. Making temple darshan accessible to everyone with comfort and convenience.
+Built with devotion for the spiritual community. Making temple darshan accessible, comfortable, and rewarding for everyone.
 
 ### Special Thanks
 - [Next.js](https://nextjs.org/) - The React framework
@@ -460,6 +478,7 @@ Built with devotion for the spiritual community. Making temple darshan accessibl
 - [shadcn/ui](https://ui.shadcn.com/) - Beautiful UI components
 - [Prisma](https://www.prisma.io/) - Modern database toolkit
 - [Lucide](https://lucide.dev/) - Beautiful icons
+- [Razorpay](https://razorpay.com/) - Payment gateway
 
 ---
 
@@ -472,4 +491,4 @@ Built with devotion for the spiritual community. Making temple darshan accessibl
 
 ---
 
-*🚌 WeekendDarshan - Your Spiritual Journey, Simplified*
+*🚌 WeekendDarshan - Your Complete Spiritual Journey, Simplified*

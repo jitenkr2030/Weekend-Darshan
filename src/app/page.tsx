@@ -119,7 +119,7 @@ export default function Home() {
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm" className="hidden sm:flex">
               <Phone className="h-4 w-4 mr-2" />
-              <span className="hidden lg:inline">+91-9876543210</span>
+              <span className="hidden lg:inline">+91-8700189551</span>
             </Button>
             
             {user ? (
@@ -147,7 +147,7 @@ export default function Home() {
         <div className="container mx-auto px-4 text-center relative z-10">
           <div className="mb-6 sm:mb-8">
             <Badge className="mb-4 sm:mb-6 bg-white/20 text-white border-white/30 text-xs sm:text-sm px-3 sm:px-4 py-2">
-              🚌 WeekendDarshan – Landing Page (Optimized Copy)
+              🚀 Premium Weekend Tours
             </Badge>
             <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 sm:mb-6">
               WeekendDarshan
@@ -165,7 +165,7 @@ export default function Home() {
               </Button>
               <div className="flex items-center gap-2">
                 <Phone className="h-5 w-5" />
-                <span className="text-lg font-semibold">Call / WhatsApp: +91-9876543210</span>
+                <span className="text-lg font-semibold">Call / WhatsApp: +91-8700189551</span>
               </div>
             </div>
             <Button variant="outline" className="bg-white/10 hover:bg-white/20 text-white border-white/30 px-6 py-3 rounded-full">
@@ -496,11 +496,10 @@ export default function Home() {
                 <Star className="h-5 w-5 text-orange-600" />
               </div>
               <div className="text-left">
-                <div className="font-bold text-gray-900">🎯 Strong Trust Line</div>
+                <div className="font-bold text-gray-900">🎯 Built by Devotees, For Devotees</div>
                 <div className="text-sm text-gray-600">"Built by a devotee who personally travelled these routes and removed every pain point."</div>
               </div>
             </div>
-            <p className="text-sm text-gray-500 mt-3 italic">This line is very powerful for conversion</p>
           </div>
         </div>
       </section>
@@ -683,7 +682,7 @@ export default function Home() {
             </Button>
             <div className="flex items-center gap-2">
               <Phone className="h-6 w-6" />
-              <span className="text-xl font-semibold">📞 Call / WhatsApp: +91-9876543210</span>
+              <span className="text-xl font-semibold">📞 Call / WhatsApp: +91-8700189551</span>
             </div>
           </div>
 
@@ -721,7 +720,7 @@ export default function Home() {
             <div>
               <h4 className="font-semibold mb-4">Contact</h4>
               <ul className="space-y-2 text-gray-400">
-                <li>📞 Phone / WhatsApp: +91-9876543210</li>
+                <li>📞 Phone / WhatsApp: +91-8700189551</li>
                 <li>📧 Email: info@weekenddarshan.com</li>
                 <li>🕐 24/7 Customer Support</li>
               </ul>

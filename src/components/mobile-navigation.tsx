@@ -70,7 +70,7 @@ export function MobileNavigation() {
             {/* Contact Button */}
             <Button variant="outline" className="w-full justify-start">
               <Phone className="h-4 w-4 mr-2" />
-              +91-9876543210
+              +91-8700189551
             </Button>
             
             {/* Auth Section */}

@@ -172,7 +172,7 @@ export async function POST(request: NextRequest) {
         },
         {
           key: 'contact_phone',
-          value: '+91-9876543210',
+          value: '+91-8700189551',
           description: 'Contact phone number'
         },
         {

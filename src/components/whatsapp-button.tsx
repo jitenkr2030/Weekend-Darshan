@@ -10,7 +10,7 @@ interface WhatsAppButtonProps {
 }
 
 export function WhatsAppButton({ 
-  phoneNumber = "+919876543210", 
+  phoneNumber = "+918700189551", 
   message = "Hi, I'm interested in WeekendDarshan tours. Can you help me with booking?" 
 }: WhatsAppButtonProps) {
   const [isOpen, setIsOpen] = useState(false)

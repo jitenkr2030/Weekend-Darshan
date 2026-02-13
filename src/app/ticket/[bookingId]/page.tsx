@@ -294,7 +294,7 @@ export default function TicketPage() {
                   Emergency Contact
                 </h4>
                 <div className="text-blue-900 font-medium">
-                  {booking.trip.emergencyContact || '+91-9876543210'}
+                  {booking.trip.emergencyContact || '+91-8700189551'}
                 </div>
                 <p className="text-blue-700 text-sm mt-1">
                   Call us for any assistance during your journey

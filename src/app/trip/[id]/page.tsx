@@ -130,7 +130,7 @@ export default function TripDetailsPage() {
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm">
               <Phone className="h-4 w-4 mr-2" />
-              +91-9876543210
+              +91-8700189551
             </Button>
           </div>
         </div>
@@ -395,7 +395,7 @@ export default function TripDetailsPage() {
               <CardContent>
                 <div className="text-center">
                   <p className="text-2xl font-bold text-orange-600 mb-2">
-                    {trip.emergencyContact || '+91-9876543210'}
+                    {trip.emergencyContact || '+91-8700189551'}
                   </p>
                   <p className="text-sm text-gray-600">24/7 Support Available</p>
                 </div>
