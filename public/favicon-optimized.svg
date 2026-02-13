@@ -1,0 +1,25 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="32" height="32" rx="6" fill="#ea580c"/>
+  
+  <!-- Bus icon simplified -->
+  <g transform="translate(4, 6)">
+    <!-- Main bus body -->
+    <rect x="1" y="6" width="22" height="12" rx="2" fill="white"/>
+    <!-- Bus windows -->
+    <rect x="3" y="8" width="3" height="2" fill="#ea580c"/>
+    <rect x="7" y="8" width="3" height="2" fill="#ea580c"/>
+    <rect x="11" y="8" width="3" height="2" fill="#ea580c"/>
+    <rect x="15" y="8" width="3" height="2" fill="#ea580c"/>
+    <rect x="19" y="8" width="2" height="2" fill="#ea580c"/>
+    <!-- Bus front windshield -->
+    <rect x="0" y="10" width="2" height="4" rx="1" fill="white"/>
+    <!-- Bus wheels -->
+    <circle cx="6" cy="20" r="2" fill="#ea580c"/>
+    <circle cx="18" cy="20" r="2" fill="#ea580c"/>
+    <!-- Om symbol on bus -->
+    <g transform="translate(10, 11)">
+      <path d="M2 1 L2 3 L3 3 L3 1 M1.5 1.5 L2.5 0.5 L3.5 1.5" stroke="#ea580c" stroke-width="0.8" fill="none"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,28 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="16" cy="16" r="16" fill="#ea580c"/>
+  
+  <!-- Bus icon -->
+  <g transform="translate(6, 8)">
+    <!-- Bus body -->
+    <rect x="2" y="4" width="16" height="10" rx="2" fill="white"/>
+    <!-- Bus windows -->
+    <rect x="4" y="6" width="2" height="2" fill="#ea580c"/>
+    <rect x="7" y="6" width="2" height="2" fill="#ea580c"/>
+    <rect x="10" y="6" width="2" height="2" fill="#ea580c"/>
+    <rect x="13" y="6" width="2" height="2" fill="#ea580c"/>
+    <!-- Bus front -->
+    <rect x="0" y="8" width="2" height="4" rx="1" fill="white"/>
+    <!-- Bus wheels -->
+    <circle cx="5" cy="16" r="1.5" fill="#ea580c"/>
+    <circle cx="15" cy="16" r="1.5" fill="#ea580c"/>
+    <!-- Temple/om symbol on bus -->
+    <path d="M10 10 L10 11 L11 11 L11 10 M9.5 10.5 L10.5 9.5 L11.5 10.5" stroke="#ea580c" stroke-width="0.5" fill="none"/>
+  </g>
+  
+  <!-- Subtle travel dots -->
+  <circle cx="4" cy="6" r="1" fill="white" opacity="0.6"/>
+  <circle cx="28" cy="10" r="1" fill="white" opacity="0.6"/>
+  <circle cx="26" cy="24" r="1" fill="white" opacity="0.6"/>
+  <circle cx="6" cy="26" r="1" fill="white" opacity="0.6"/>
+</svg>
